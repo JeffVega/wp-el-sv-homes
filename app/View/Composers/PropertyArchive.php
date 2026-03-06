@@ -69,7 +69,7 @@ class PropertyArchive extends Composer
                 if (!is_wp_error($link)) return $link;
             }
         }
-        return home_url('/property-search');
+        return sv_property_search_url();
     }
 
     private function getProperties(): array

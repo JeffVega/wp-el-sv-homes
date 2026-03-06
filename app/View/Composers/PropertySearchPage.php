@@ -24,7 +24,7 @@ class PropertySearchPage extends Composer
             'totalFound'      => (int) $query->found_posts,
             'archiveTitle'    => __('Properties in El Salvador', 'sage'),
             'termDescription' => '',
-            'formAction'      => home_url('/property-search'),
+            'formAction'      => sv_property_search_url(),
             'whatsappGlobal'  => get_option('sv_whatsapp_global', ''),
         ];
     }

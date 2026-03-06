@@ -39,17 +39,18 @@ class Property
 
     private static function registerTaxonomies(): void
     {
-        // Property Type
+        // Property Type — internal tagging only, no public archive URLs
         register_taxonomy('property_type', 'property', [
             'labels' => [
                 'name'          => __('Property Types', 'sage'),
                 'singular_name' => __('Property Type', 'sage'),
                 'add_new_item'  => __('Add New Type', 'sage'),
             ],
-            'hierarchical'      => true,
-            'public'            => true,
-            'show_in_rest'      => true,
-            'rewrite'           => ['slug' => 'property-type'],
+            'hierarchical'       => true,
+            'public'             => true,
+            'publicly_queryable' => false,
+            'show_in_rest'       => true,
+            'rewrite'            => false,
         ]);
 
         // Property Status

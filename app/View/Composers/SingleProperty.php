@@ -20,10 +20,13 @@ class SingleProperty extends Composer
         $property = FrontPage::hydrateProperties([$post])[0];
         $amenitiesList = PropertyMeta::amenitiesList();
 
+        $similar = $this->getRecommendedNearby($post);
+
         return [
             'property'        => $property,
             'amenitiesList'   => $amenitiesList,
-            'similarProps'    => $this->getSimilarProperties($post),
+            'similarProps'    => $similar['props'],
+            'similarLocation' => $similar['location'],
             'whatsappGlobal'  => get_option('sv_whatsapp_global', ''),
             'galleryImages'   => $this->buildGallery($property),
         ];
@@ -52,9 +55,13 @@ class SingleProperty extends Composer
         return $images;
     }
 
-    private function getSimilarProperties(\WP_Post $post): array
+    private function getRecommendedNearby(\WP_Post $post): array
     {
-        $types = wp_get_post_terms($post->ID, 'property_type', ['fields' => 'ids']);
+        $locs         = wp_get_post_terms($post->ID, 'property_location');
+        $locationName = (! is_wp_error($locs) && ! empty($locs)) ? $locs[0]->name : '';
+        $locationIds  = (! is_wp_error($locs) && ! empty($locs))
+            ? wp_list_pluck($locs, 'term_id')
+            : [];
 
         $args = [
             'post_type'      => 'property',
@@ -62,15 +69,22 @@ class SingleProperty extends Composer
             'post__not_in'   => [$post->ID],
             'post_status'    => 'publish',
             'orderby'        => 'rand',
+            'meta_query'     => [
+                ['key' => '_sv_recommended', 'value' => '1', 'compare' => '='],
+            ],
         ];
 
-        if (! is_wp_error($types) && ! empty($types)) {
+        if (! empty($locationIds)) {
             $args['tax_query'] = [
-                ['taxonomy' => 'property_type', 'terms' => $types],
+                ['taxonomy' => 'property_location', 'terms' => $locationIds],
             ];
         }
 
         $q = new \WP_Query($args);
-        return FrontPage::hydrateProperties($q->posts);
+
+        return [
+            'props'    => FrontPage::hydrateProperties($q->posts),
+            'location' => $locationName,
+        ];
     }
 }

@@ -4,7 +4,7 @@
 --}}
 @php
   $compact    = $compact ?? false;
-  $archiveUrl = home_url('/property-search');
+  $archiveUrl = sv_property_search_url();
 @endphp
 
 @if($compact)

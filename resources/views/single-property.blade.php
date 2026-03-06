@@ -17,7 +17,7 @@
   <div class="sv-container text-[0.82rem] text-sv-stone flex items-center gap-2 flex-wrap">
     <a href="{{ home_url('/') }}" class="text-sv-blue no-underline hover:text-sv-blue-mid">{{ __('Home', 'sage') }}</a>
     <span>›</span>
-    <a href="{{ get_post_type_archive_link('property') }}" class="text-sv-blue no-underline hover:text-sv-blue-mid">{{ __('Properties', 'sage') }}</a>
+    <a href="{{ sv_property_search_url() }}" class="text-sv-blue no-underline hover:text-sv-blue-mid">{{ __('Properties', 'sage') }}</a>
     @if($p['type'])
       <span>›</span>
       <span>{{ $p['type'] }}</span>
@@ -269,12 +269,18 @@
 
   </div>{{-- END .sv-single-layout --}}
 
-  {{-- ── Similar Properties ──────────────────────────────── --}}
+  {{-- ── Recommended Nearby ───────────────────────────────── --}}
   @if(!empty($similarProps))
     <div style="margin-top:3rem;">
       <div class="sv-section-header">
-        <div class="sv-section-eyebrow">{{ __('You might also like', 'sage') }}</div>
-        <h2 class="sv-section-title">{{ __('Similar properties', 'sage') }}</h2>
+        <div class="sv-section-eyebrow">{{ __('Recommended', 'sage') }}</div>
+        <h2 class="sv-section-title">
+          @if($similarLocation)
+            {{ sprintf(__('More in %s', 'sage'), $similarLocation) }}
+          @else
+            {{ __('Recommended near you', 'sage') }}
+          @endif
+        </h2>
       </div>
       <div class="sv-property-grid">
         @foreach($similarProps as $property)

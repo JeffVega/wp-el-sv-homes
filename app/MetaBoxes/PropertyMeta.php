@@ -269,10 +269,15 @@ class PropertyMeta
             <input type="checkbox" name="_sv_featured" value="1" <?= checked($m['_sv_featured'], '1', false) ?> style="width:18px;height:18px;">
             <span style="color:#F0A500;">&#9733;</span> <?= esc_html__('Mark as Featured', 'sage') ?>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer;">
+        <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer;margin-bottom:12px;">
             <input type="checkbox" name="_sv_hot_deal" value="1" <?= checked($m['_sv_hot_deal'], '1', false) ?> style="width:18px;height:18px;">
             <span style="color:#e53e3e;">&#128293;</span> <?= esc_html__('Hot Deal', 'sage') ?>
         </label>
+        <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer;">
+            <input type="checkbox" name="_sv_recommended" value="1" <?= checked($m['_sv_recommended'], '1', false) ?> style="width:18px;height:18px;">
+            <span style="color:#1B3A8A;">&#10003;</span> <?= esc_html__('Recommended', 'sage') ?>
+        </label>
+        <p style="font-size:11px;color:#666;margin-top:6px;margin-left:28px;"><?= esc_html__('Show in "Recommended near you" on similar listings.', 'sage') ?></p>
         <?php
     }
 
@@ -305,8 +310,9 @@ class PropertyMeta
         }
 
         // Checkboxes
-        update_post_meta($postId, '_sv_featured', isset($_POST['_sv_featured']) ? '1' : '0');
-        update_post_meta($postId, '_sv_hot_deal', isset($_POST['_sv_hot_deal']) ? '1' : '0');
+        update_post_meta($postId, '_sv_featured',    isset($_POST['_sv_featured'])    ? '1' : '0');
+        update_post_meta($postId, '_sv_hot_deal',    isset($_POST['_sv_hot_deal'])    ? '1' : '0');
+        update_post_meta($postId, '_sv_recommended', isset($_POST['_sv_recommended']) ? '1' : '0');
 
         // Amenities (array)
         $amenities = isset($_POST['_sv_amenities']) ? array_map('sanitize_text_field', (array) $_POST['_sv_amenities']) : [];
@@ -331,7 +337,7 @@ class PropertyMeta
             '_sv_video_url', '_sv_address', '_sv_city',
             '_sv_map_lat', '_sv_map_lng',
             '_sv_whatsapp', '_sv_agent_name',
-            '_sv_featured', '_sv_hot_deal',
+            '_sv_featured', '_sv_hot_deal', '_sv_recommended',
             '_sv_amenities', '_sv_gallery',
         ];
 

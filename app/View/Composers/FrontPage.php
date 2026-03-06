@@ -94,7 +94,7 @@ class FrontPage extends Composer
             'name'  => $t->name,
             'slug'  => $t->slug,
             'count' => $t->count,
-            'link'  => get_term_link($t),
+            'link'  => sv_property_search_url(['property_type' => $t->slug]),
         ], $terms);
     }
 
@@ -159,8 +159,9 @@ class FrontPage extends Composer
                 'mapLng'      => $meta['_sv_map_lng'],
                 'whatsapp'    => $meta['_sv_whatsapp'],
                 'agentName'   => $meta['_sv_agent_name'],
-                'featured'    => $meta['_sv_featured'] === '1',
-                'hotDeal'     => $meta['_sv_hot_deal'] === '1',
+                'featured'     => $meta['_sv_featured'] === '1',
+                'hotDeal'      => $meta['_sv_hot_deal'] === '1',
+                'recommended'  => $meta['_sv_recommended'] === '1',
                 'amenities'   => $amenities,
                 'yearBuilt'   => $meta['_sv_year_built'],
                 'videoUrl'    => $meta['_sv_video_url'],

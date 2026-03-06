@@ -51,7 +51,7 @@
         {{-- Fallback when no menu is assigned in WP Admin --}}
         <ul class="sv-nav">
           <li><a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a></li>
-          <li><a href="{{ home_url('/property-search') }}">{{ __('Properties', 'sage') }}</a></li>
+          <li><a href="{{ sv_property_search_url() }}">{{ __('Properties', 'sage') }}</a></li>
           <li><a href="{{ home_url('/about') }}">{{ __('About Us', 'sage') }}</a></li>
           <li><a href="{{ home_url('/blog') }}">{{ __('Blog', 'sage') }}</a></li>
           <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
