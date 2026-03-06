@@ -23,7 +23,7 @@ import.meta.glob([
     const isHomeLink = href === origin;
     const isActive = isHomeLink
       ? current === origin
-      : (href && current.startsWith(href));
+      : (href && current === href);
     if (isActive) {
       a.classList.add('active');
     }

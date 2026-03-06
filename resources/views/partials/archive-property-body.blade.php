@@ -197,7 +197,7 @@
           <p style="color:var(--color-sv-stone);margin-bottom:1.5rem;">
             {{ __('Try adjusting the filters or search all of El Salvador.', 'sage') }}
           </p>
-          <a href="{{ get_post_type_archive_link('property') }}" class="sv-btn sv-btn-primary">
+          <a href="{{ home_url('/property-search') }}" class="sv-btn sv-btn-primary">
             {{ __('View all properties', 'sage') }}
           </a>
         </div>

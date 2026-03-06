@@ -3015,14 +3015,47 @@ textarea.sv-form-control {
   box-shadow: 0 2px 30px rgba(0,0,0,0.35);
 }
 
-/* Active nav link: gold underline */
+/* Nav wrapper: flex row so menu ul + WhatsApp CTA sit side-by-side */
+.sv-nav-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* WhatsApp CTA button (lives outside the <ul>) */
+.sv-nav__wa-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--color-sv-gold);
+  color: var(--color-sv-navy) !important;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-btn);
+  text-decoration: none;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+  transition: background 0.2s, transform 0.15s;
+}
+.sv-nav__wa-cta:hover {
+  background: var(--color-sv-gold-light);
+  color: var(--color-sv-navy) !important;
+  transform: translateY(-1px);
+}
+
+/* Active nav link: gold underline — covers both manual .active and WP menu classes */
 .sv-nav a.active,
-.sv-nav a[aria-current="page"] {
+.sv-nav a[aria-current="page"],
+.sv-nav li.current-menu-item > a,
+.sv-nav li.current_page_item > a {
   color: #fff;
   position: relative;
 }
 .sv-nav a.active::after,
-.sv-nav a[aria-current="page"]::after {
+.sv-nav a[aria-current="page"]::after,
+.sv-nav li.current-menu-item > a::after,
+.sv-nav li.current_page_item > a::after {
   content: '';
   position: absolute;
   bottom: 0;

@@ -27,7 +27,7 @@ class Property
                 'menu_name'          => __('Properties', 'sage'),
             ],
             'public'             => true,
-            'has_archive'        => 'property-search',
+            'has_archive'        => false,
             'rewrite'            => ['slug' => 'listings', 'with_front' => false],
             'supports'           => ['title', 'editor', 'thumbnail', 'excerpt'],
             'menu_icon'          => 'dashicons-building',

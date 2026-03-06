@@ -31,12 +31,12 @@
       <div>
         <div class="sv-footer__col-title">{{ __('Properties', 'sage') }}</div>
         <ul class="sv-footer__links">
-          <li><a href="{{ get_post_type_archive_link('property') }}">{{ __('All properties', 'sage') }}</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?property_status=for-sale">{{ __('For sale', 'sage') }}</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?property_status=for-rent">{{ __('For rent', 'sage') }}</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?property_type=casa">{{ __('Houses', 'sage') }}</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?property_type=apartamento">{{ __('Apartments', 'sage') }}</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?property_type=terreno">{{ __('Land', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}">{{ __('All properties', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}?property_status=for-sale">{{ __('For sale', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}?property_status=for-rent">{{ __('For rent', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}?property_type=casa">{{ __('Houses', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}?property_type=apartamento">{{ __('Apartments', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}?property_type=terreno">{{ __('Land', 'sage') }}</a></li>
         </ul>
       </div>
 

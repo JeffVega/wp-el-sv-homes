@@ -38,21 +38,35 @@
 
     {{-- Navigation --}}
     <div class="sv-nav-wrapper" id="sv-nav-wrapper">
-      <ul class="sv-nav">
-        <li><a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a></li>
-        <li><a href="{{ get_post_type_archive_link('property') }}">{{ __('Properties', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/about') }}">{{ __('About Us', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/blog') }}">{{ __('Blog', 'sage') }}</a></li>
-        <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
-        @php($whatsapp = get_option('sv_whatsapp_global', ''))
-        @if($whatsapp)
-          <li class="sv-nav__cta">
-            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}" target="_blank" rel="noopener">
-              💬 {{ __('WhatsApp', 'sage') }}
-            </a>
-          </li>
-        @endif
-      </ul>
+
+      @if(has_nav_menu('primary_navigation'))
+        @php(wp_nav_menu([
+          'theme_location' => 'primary_navigation',
+          'container'      => false,
+          'menu_class'     => 'sv-nav',
+          'fallback_cb'    => false,
+          'depth'          => 1,
+        ]))
+      @else
+        {{-- Fallback when no menu is assigned in WP Admin --}}
+        <ul class="sv-nav">
+          <li><a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/property-search') }}">{{ __('Properties', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/about') }}">{{ __('About Us', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/blog') }}">{{ __('Blog', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
+        </ul>
+      @endif
+
+      @php($whatsapp = get_option('sv_whatsapp_global', ''))
+      @if($whatsapp)
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}"
+           target="_blank" rel="noopener"
+           class="sv-nav__wa-cta">
+          💬 {{ __('WhatsApp', 'sage') }}
+        </a>
+      @endif
+
     </div>
 
   </div>
