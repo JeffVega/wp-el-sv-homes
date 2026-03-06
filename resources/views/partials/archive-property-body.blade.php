@@ -20,7 +20,8 @@
 
 <div class="sv-container py-10">
 
-  <div class="mb-8">
+  {{-- Desktop search bar (hidden on mobile — use the filter sidebar's keyword field) --}}
+  <div class="mb-8 sv-search-bar-desktop-only">
     @include('partials.property-search', [
       'types'     => $propertyTypes,
       'statuses'  => $propertyStatus,
@@ -29,19 +30,46 @@
     ])
   </div>
 
+  {{-- Mobile search + filter toggle bar --}}
+  <div class="sv-mobile-filter-bar">
+    <form class="sv-mobile-filter-bar__search" action="{{ $formAction }}" method="GET">
+      <input
+        type="text"
+        name="keyword"
+        class="sv-mobile-search-input"
+        value="{{ $currentFilters['keyword'] }}"
+        placeholder="{{ __('Search properties…', 'sage') }}"
+        autocomplete="off"
+      >
+      <button type="submit" class="sv-mobile-search-btn" aria-label="{{ __('Search', 'sage') }}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+    </form>
+    <button type="button" id="sv-filter-toggle" class="sv-mobile-filter-toggle" aria-expanded="false" aria-controls="sv-filter-sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      {{ __('Filters', 'sage') }}
+      <span id="sv-filter-badge" class="sv-filter-badge" style="display:none;"></span>
+    </button>
+  </div>
+
   <div class="sv-archive-layout">
 
-    <aside class="sv-filter-sidebar" aria-label="{{ __('Filters', 'sage') }}">
-      <div class="sv-filter-sidebar__header">
+    <aside id="sv-filter-sidebar" class="sv-filter-sidebar" aria-label="{{ __('Filters', 'sage') }}">
+      <div class="sv-filter-sidebar__header" id="sv-filter-sidebar-header">
         <span>🔍 {{ __('Filters', 'sage') }}</span>
-        @if(array_filter($currentFilters))
-          <a href="{{ get_post_type_archive_link('property') }}" style="color:rgba(255,255,255,0.7);font-size:0.78rem;text-decoration:none;">
-            {{ __('Clear', 'sage') }}
-          </a>
-        @endif
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          @if(array_filter($currentFilters))
+            <a href="{{ get_post_type_archive_link('property') }}" style="color:rgba(255,255,255,0.7);font-size:0.78rem;text-decoration:none;">
+              {{ __('Clear', 'sage') }}
+            </a>
+          @endif
+          <span class="sv-filter-sidebar__chevron" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </span>
+        </div>
       </div>
 
-      <form class="sv-filter-sidebar__body" method="GET" action="{{ $formAction }}">
+      <form id="sv-filter-body" class="sv-filter-sidebar__body" method="GET" action="{{ $formAction }}">
 
         <div class="sv-filter-group">
           <label class="sv-filter-label" for="sf-keyword">{{ __('Search', 'sage') }}</label>

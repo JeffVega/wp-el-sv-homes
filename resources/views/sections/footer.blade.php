@@ -8,13 +8,10 @@
         <p class="sv-footer__tagline">
           {{ __('Your trusted real estate partner in El Salvador. Connecting families with their dream home.', 'sage') }}
         </p>
-        {{-- El Salvador flag stripe --}}
-        <div class="sv-footer__flag" aria-label="El Salvador flag">
-          <span style="background:#1B3A8A;"></span>
-          <span style="background:#fff;"></span>
-          <span style="background:#1B3A8A;"></span>
+        <div class="sv-footer__flag" aria-label="{{ __('El Salvador flag', 'sage') }}">
+          <span></span><span></span><span></span>
         </div>
-        <div class="sv-social-links" style="margin-top:1rem;">
+        <div class="sv-social-links">
           <a href="#" class="sv-social-link" aria-label="Facebook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           </a>
@@ -43,16 +40,27 @@
         </ul>
       </div>
 
-      {{-- Locations (SEO: taxonomy term URLs e.g. /location/san-salvador/) --}}
+      {{-- Cities — linked to Location CPT pages for SEO --}}
       <div>
-        <div class="sv-footer__col-title">{{ __('Departments', 'sage') }}</div>
-        <ul class="sv-footer__links">
-          @foreach(get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]) as $loc)
-            @if(!is_wp_error($loc))
-              <li><a href="{{ get_term_link($loc) }}">{{ $loc->name }}</a></li>
-            @endif
-          @endforeach
-        </ul>
+        <div class="sv-footer__col-title">{{ __('Cities', 'sage') }}</div>
+        @php
+          $footerLocations = get_posts([
+            'post_type'      => 'location',
+            'posts_per_page' => 14,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+          ]);
+        @endphp
+        @if(!empty($footerLocations))
+          <ul class="sv-footer__links">
+            @foreach($footerLocations as $loc)
+              <li><a href="{{ get_permalink($loc) }}">{{ get_the_title($loc) }}</a></li>
+            @endforeach
+          </ul>
+        @else
+          <p class="sv-footer__empty">{{ __('Coming soon', 'sage') }}</p>
+        @endif
       </div>
 
       {{-- Company --}}
@@ -62,20 +70,21 @@
           <li><a href="{{ home_url('/about') }}">{{ __('About Us', 'sage') }}</a></li>
           <li><a href="{{ home_url('/blog') }}">{{ __('Blog', 'sage') }}</a></li>
           <li><a href="{{ home_url('/contact') }}">{{ __('Contact', 'sage') }}</a></li>
-          <li><a href="{{ home_url('/privacy-policy') }}">{{ __('Privacy', 'sage') }}</a></li>
-          <li><a href="{{ home_url('/terms') }}">{{ __('Terms', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/privacy-policy') }}">{{ __('Privacy Policy', 'sage') }}</a></li>
+          <li><a href="{{ home_url('/terms') }}">{{ __('Terms of Use', 'sage') }}</a></li>
         </ul>
+
         @php($whatsapp = get_option('sv_whatsapp_global', ''))
         @if($whatsapp)
-          <div style="margin-top:1.5rem;">
+          <div class="sv-footer__wa-wrap">
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}"
                target="_blank" rel="noopener"
-               style="display:inline-flex;align-items:center;gap:0.5rem;background:#25D366;color:#fff;padding:0.6rem 1.2rem;border-radius:999px;font-size:0.82rem;font-weight:700;text-decoration:none;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;">
+               class="sv-footer__wa-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                 <path d="M11.994 1.998C6.478 1.998 2 6.476 2 11.992c0 1.762.46 3.416 1.264 4.851L2 22.002l5.337-1.397a9.961 9.961 0 0 0 4.657 1.149c5.516 0 9.994-4.478 9.994-9.994 0-5.516-4.478-9.762-9.994-9.762z"/>
               </svg>
-              {{ __('Message us now', 'sage') }}
+              {{ __('Message us on WhatsApp', 'sage') }}
             </a>
           </div>
         @endif

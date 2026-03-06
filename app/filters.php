@@ -196,7 +196,7 @@ add_action('wp_head', function (): void {
             );
         }
     } elseif (is_post_type_archive('property')) {
-        $desc = __('Browse properties for sale and rent across all 14 departments of El Salvador — houses, apartments, land, farms, and commercial properties.', 'sage');
+        $desc = __('Browse properties for sale and rent across the major cities of El Salvador — houses, apartments, land, farms, and commercial properties.', 'sage');
     }
 
     if ($desc) {

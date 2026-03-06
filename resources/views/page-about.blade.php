@@ -65,7 +65,7 @@
       @foreach([
         ['🤝', __('Trust', 'sage'), __('We work with transparency and honesty. Your trust is the pillar of everything we do.', 'sage')],
         ['🏡', __('Commitment', 'sage'), __('We commit to finding the perfect property for you, regardless of your budget or needs.', 'sage')],
-        ['🗺️', __('Local Knowledge', 'sage'), __('14 departments, hundreds of municipalities. We know El Salvador better than anyone.', 'sage')],
+        ['🗺️', __('Local Knowledge', 'sage'), __('Major cities, hundreds of neighbourhoods. We know El Salvador better than anyone.', 'sage')],
         ['⚡', __('Speed', 'sage'), __('Fast response, agile processes. We know your time is valuable.', 'sage')],
       ] as [$icon, $title, $desc])
         <div class="sv-feature-card">
@@ -84,7 +84,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
       @foreach([
         [get_option('sv_families_helped', 500) . '+', __('Families helped', 'sage')],
-        ['14', __('Departments covered', 'sage')],
+        ['14', __('Cities covered', 'sage')],
         ['10+', __('Years of experience', 'sage')],
         [wp_count_posts('property')->publish ?? 0, __('Active properties', 'sage')],
       ] as [$num, $label])

@@ -107,6 +107,88 @@ import.meta.glob([
   });
 })();
 
+// ─── Mobile filter toggle ────────────────────────────────────
+(function initMobileFilter() {
+  const toggle  = document.getElementById('sv-filter-toggle');
+  const sidebar = document.getElementById('sv-filter-sidebar');
+  const header  = document.getElementById('sv-filter-sidebar-header');
+  const badge   = document.getElementById('sv-filter-badge');
+
+  if (!sidebar) return;
+
+  // Count active filters from current URL params
+  const countActiveFilters = () => {
+    const params = new URLSearchParams(window.location.search);
+    const watched = ['keyword', 'property_status', 'property_type', 'location', 'min_price', 'max_price', 'bedrooms'];
+    return watched.filter(k => (params.get(k) || '').trim() !== '').length;
+  };
+
+  const updateBadge = () => {
+    if (!badge) return;
+    const count = countActiveFilters();
+    badge.textContent = String(count);
+    badge.style.display = count > 0 ? 'inline-flex' : 'none';
+  };
+
+  const isMobile = () => window.innerWidth <= 900;
+
+  const openSidebar = () => {
+    sidebar.classList.add('is-visible', 'is-open');
+    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+  };
+
+  const closeSidebar = () => {
+    sidebar.classList.remove('is-open');
+    // Wait for transition then hide
+    setTimeout(() => {
+      if (!sidebar.classList.contains('is-open')) {
+        sidebar.classList.remove('is-visible');
+      }
+    }, 370);
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  const toggleSidebar = () => {
+    if (!isMobile()) return;
+    if (sidebar.classList.contains('is-open')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  };
+
+  // Mobile toggle button
+  if (toggle) {
+    toggle.addEventListener('click', toggleSidebar);
+  }
+
+  // Header tap also toggles on mobile
+  if (header) {
+    header.addEventListener('click', () => {
+      if (isMobile()) toggleSidebar();
+    });
+  }
+
+  // On desktop: always show sidebar (remove mobile-only visibility class)
+  const syncDesktop = () => {
+    if (!isMobile()) {
+      sidebar.classList.remove('is-visible', 'is-open');
+      sidebar.style.display = '';
+    }
+  };
+
+  window.addEventListener('resize', syncDesktop, { passive: true });
+  syncDesktop();
+
+  // Init badge
+  updateBadge();
+
+  // If any active filters on page load, auto-open on mobile
+  if (isMobile() && countActiveFilters() > 0) {
+    openSidebar();
+  }
+})();
+
 // ─── Stat counter animation ──────────────────────────────────
 (function initCounters() {
   const elements = document.querySelectorAll('[data-count]');

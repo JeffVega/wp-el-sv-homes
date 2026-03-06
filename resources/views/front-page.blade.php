@@ -142,7 +142,7 @@
     <div class="sv-section-header sv-section-header--center" style="margin-bottom:2rem;">
       <div class="sv-section-eyebrow">{{ __('Explore by location', 'sage') }}</div>
       <h2 class="sv-section-title">{{ __('Properties by department', 'sage') }}</h2>
-      <p class="sv-section-subtitle" style="margin-top:0.5rem;">{{ __('Browse houses, land and apartments in each of the 14 departments.', 'sage') }}</p>
+      <p class="sv-section-subtitle" style="margin-top:0.5rem;">{{ __('Browse houses, land and apartments across the major cities of El Salvador.', 'sage') }}</p>
     </div>
 
     <div class="sv-type-grid">
@@ -160,29 +160,15 @@
 
 
 {{-- ═══════════════════════════════════════════════════════════
-     FEATURED PROPERTIES
+     FEATURED PROPERTIES — Spotlight layout
 ═══════════════════════════════════════════════════════════ --}}
 @if(!empty($featuredProperties))
-<section class="sv-section sv-section--white">
-  <div class="sv-container">
-    <div class="sv-section-header sv-section-header--split">
-      <div>
-        <div class="sv-section-eyebrow">{{ __('Special selection', 'sage') }}</div>
-        <h2 class="sv-section-title">{{ __('Featured Properties', 'sage') }}</h2>
-      </div>
-      <a href="{{ get_post_type_archive_link('property') }}" class="sv-btn sv-btn-outline sv-btn-sm">
-        {{ __('View all', 'sage') }}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </a>
-    </div>
-
-    <div class="sv-property-grid">
-      @foreach($featuredProperties as $property)
-        @include('partials.property-card', ['property' => $property])
-      @endforeach
-    </div>
-  </div>
-</section>
+  @include('partials.featured-listings-spotlight', [
+    'properties'     => array_slice($featuredProperties, 0, 3),
+    'sectionEyebrow' => __('Special selection', 'sage'),
+    'sectionTitle'   => __('Properties in the Spotlight', 'sage'),
+    'viewAllUrl'     => get_post_type_archive_link('property'),
+  ])
 @endif
 
 
@@ -203,7 +189,7 @@
       <div class="sv-feature-card">
         <div class="sv-feature-icon">🔍</div>
         <h3>{{ __('Personalized Search', 'sage') }}</h3>
-        <p>{{ __('Filter by location, price and property type. We find exactly what you need in each of the 14 departments.', 'sage') }}</p>
+        <p>{{ __('Filter by location, price and property type. We find exactly what you need across the major cities of El Salvador.', 'sage') }}</p>
       </div>
       <div class="sv-feature-card">
         <div class="sv-feature-icon">💬</div>

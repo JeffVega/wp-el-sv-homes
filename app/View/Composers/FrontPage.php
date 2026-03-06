@@ -92,17 +92,32 @@ class FrontPage extends Composer
 
     private function getLocations(): array
     {
-        $terms = get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]);
-        if (is_wp_error($terms)) {
-            return [];
-        }
-        // Use taxonomy term URL for SEO: /location/san-salvador/ instead of ?location=san-salvador
-        return array_map(fn($t) => [
-            'name'  => $t->name,
-            'slug'  => $t->slug,
-            'count' => $t->count,
-            'link'  => get_term_link($t),
-        ], $terms);
+        $cptPosts = get_posts([
+            'post_type'      => 'location',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+        ]);
+
+        return array_map(function (\WP_Post $p) {
+            $termSlug = get_post_meta($p->ID, '_sv_location_term_slug', true);
+            $count    = 0;
+
+            if ($termSlug) {
+                $term = get_term_by('slug', $termSlug, 'property_location');
+                if ($term && ! is_wp_error($term)) {
+                    $count = (int) $term->count;
+                }
+            }
+
+            return [
+                'name'  => get_the_title($p),
+                'slug'  => $p->post_name,
+                'count' => $count,
+                'link'  => get_permalink($p),
+            ];
+        }, $cptPosts);
     }
 
     public static function hydrateProperties(array $posts): array

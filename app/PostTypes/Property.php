@@ -65,8 +65,8 @@ class Property
             'rewrite'           => ['slug' => 'property-status'],
         ]);
 
-        // Location / Department — public for admin UI and filtering, but
-        // archive URLs are disabled to avoid competing with the Location CPT pages.
+        // Location / Department — used internally to tag properties.
+        // Public pages live on the Location CPT at /locations/{slug}/.
         register_taxonomy('property_location', 'property', [
             'labels' => [
                 'name'          => __('Locations', 'sage'),
