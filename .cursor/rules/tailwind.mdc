@@ -1,0 +1,13 @@
+---
+description: Use Tailwind CSS for styling in this theme
+globs: ["**/*.blade.php", "**/resources/css/**"]
+---
+
+# Use Tailwind for styling
+
+- Prefer **Tailwind utility classes** over inline `style=""` or new one-off CSS.
+- Theme design tokens live in `resources/css/app.css` under `@theme`:
+  - Colors: `--color-sv-*` → e.g. `bg-sv-navy`, `text-sv-gold-light`, `border-sv-stone-light`
+  - Fonts: `--font-display`, `--font-body` → `font-display`, `font-body`
+- Reuse existing layout/semantic classes: `.sv-container`, `.sv-section`, `.sv-page-hero`, `.sv-section-eyebrow`, `.sv-section-title`, `.sv-btn`, `.sv-form-group`, etc.
+- Add new custom CSS only when a reusable pattern or component justifies it; otherwise use Tailwind utilities (including arbitrary values like `text-[0.95rem]` or `shadow-[var(--shadow-card)]` when needed).
