@@ -261,6 +261,49 @@ add_action('customize_register', function (\WP_Customize_Manager $wp_customize) 
         'priority' => 30,
     ]);
 
+    /* ── Header / Logo ────────────────────────────────────────── */
+
+    $wp_customize->add_section('sv_header', [
+        'title' => __('Header & Logo', 'sage'),
+        'panel' => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_header_logo', [
+        'type'              => 'option',
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new \WP_Customize_Image_Control($wp_customize, 'sv_header_logo', [
+        'label'       => __('Logo Image', 'sage'),
+        'description' => __('Upload a custom logo. Leave blank to use the default SVG. Recommended: square or 2:1 wide, transparent PNG.', 'sage'),
+        'section'     => 'sv_header',
+    ]));
+
+    $wp_customize->add_setting('sv_logo_primary', [
+        'type'              => 'option',
+        'default'           => 'SV',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_logo_primary', [
+        'label'   => __('Logo Primary Text', 'sage'),
+        'section' => 'sv_header',
+        'type'    => 'text',
+    ]);
+
+    $wp_customize->add_setting('sv_logo_secondary', [
+        'type'              => 'option',
+        'default'           => 'Homes',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_logo_secondary', [
+        'label'   => __('Logo Secondary Text', 'sage'),
+        'description' => __('Displayed in gold accent (e.g. "Homes" in "SV Homes").', 'sage'),
+        'section' => 'sv_header',
+        'type'    => 'text',
+    ]);
+
     /* ── Hero Section ─────────────────────────────────────────── */
 
     $wp_customize->add_section('sv_hero', [
@@ -337,8 +380,9 @@ add_action('customize_register', function (\WP_Customize_Manager $wp_customize) 
     /* ── API Keys ─────────────────────────────────────────────── */
 
     $wp_customize->add_section('sv_api_keys', [
-        'title' => __('API Keys', 'sage'),
-        'panel' => 'sv_homes',
+        'title'       => __('API Keys', 'sage'),
+        'panel'       => 'sv_homes',
+        'capability'  => 'manage_options',
     ]);
 
     $wp_customize->add_setting('sv_google_maps_key', [
@@ -347,10 +391,43 @@ add_action('customize_register', function (\WP_Customize_Manager $wp_customize) 
         'sanitize_callback' => 'sanitize_text_field',
     ]);
     $wp_customize->add_control('sv_google_maps_key', [
-        'label'   => __('Google Maps API Key', 'sage'),
-        'section' => 'sv_api_keys',
-        'type'    => 'text',
+        'label'       => __('Google Maps API Key', 'sage'),
+        'description' => __('Restrict this key in Google Cloud Console by HTTP referrer to your domain. Keys are stored in the database and only visible to administrators.', 'sage'),
+        'section'     => 'sv_api_keys',
+        'type'        => 'text',
     ]);
+});
+
+/**
+ * Store API keys with autoload=false so they are not loaded on every page request.
+ */
+add_action('customize_save_sv_google_maps_key', function () {
+    $value = get_option('sv_google_maps_key', '');
+    update_option('sv_google_maps_key', $value, false);
+});
+
+/**
+ * Live preview for Customizer: hero headline and subheadline update as you type.
+ */
+add_action('customize_preview_init', function () {
+    wp_add_inline_script('customize-preview', "
+        (function() {
+            if (typeof wp === 'undefined' || !wp.customize) return;
+            function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+            wp.customize('sv_hero_title', function(setting) {
+                setting.bind(function(value) {
+                    var el = document.getElementById('sv-hero-title');
+                    if (el) el.innerHTML = (value || '').split('\\n').map(esc).join('<br>');
+                });
+            });
+            wp.customize('sv_hero_subtitle', function(setting) {
+                setting.bind(function(value) {
+                    var el = document.getElementById('sv-hero-subtitle');
+                    if (el) el.textContent = value || '';
+                });
+            });
+        })();
+    ");
 });
 
 /**

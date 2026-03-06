@@ -18,7 +18,7 @@
   <div class="sv-card__image-wrap">
     @if($p['thumbnail'])
       <img
-        src="{{ $p['thumbnail'] }}"
+        src="{{ esc_url($p['thumbnail']) }}"
         alt="{{ esc_attr($p['title']) }}"
         loading="lazy"
         itemprop="image"
@@ -64,7 +64,7 @@
           </svg>
         </a>
       @endif
-      <a href="{{ $p['permalink'] }}" class="sv-card__action-btn" title="{{ __('View details', 'sage') }}" aria-label="{{ __('View property', 'sage') }}">
+      <a href="{{ esc_url($p['permalink']) }}" class="sv-card__action-btn" title="{{ __('View details', 'sage') }}" aria-label="{{ __('View property', 'sage') }}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
         </svg>
@@ -88,7 +88,7 @@
     @endif
 
     <h3 class="sv-card__title" itemprop="name">
-      <a href="{{ $p['permalink'] }}">{{ $p['title'] }}</a>
+      <a href="{{ esc_url($p['permalink']) }}">{{ esc_html($p['title']) }}</a>
     </h3>
 
     @if($locationText)
@@ -131,7 +131,7 @@
 
     {{-- Footer CTA --}}
     <div class="sv-card__footer">
-      <a href="{{ $p['permalink'] }}" class="sv-btn sv-btn-primary sv-btn-sm">
+      <a href="{{ esc_url($p['permalink']) }}" class="sv-btn sv-btn-primary sv-btn-sm">
         {{ __('View details', 'sage') }}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>

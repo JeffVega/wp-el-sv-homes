@@ -42,13 +42,13 @@
     <div class="sv-spotlight">
 
       {{-- ── HERO CARD ─────────────────────────────────── --}}
-      <a href="{{ $hp['permalink'] }}"
+      <a href="{{ esc_url($hp['permalink']) }}"
          class="sv-spotlight__hero"
          aria-label="{{ esc_attr($hp['title']) }}"
          itemscope itemtype="https://schema.org/RealEstateListing">
 
         @if($hp['thumbnail'])
-          <img src="{{ $hp['thumbnail'] }}"
+          <img src="{{ esc_url($hp['thumbnail']) }}"
                alt="{{ esc_attr($hp['title']) }}"
                loading="eager"
                class="sv-spotlight__hero-img"
@@ -139,14 +139,14 @@
             $sLoc   = trim(implode(', ', array_filter([$sp['city'], $sp['location']])));
           @endphp
 
-          <a href="{{ $sp['permalink'] }}"
+          <a href="{{ esc_url($sp['permalink']) }}"
              class="sv-spotlight__mini"
              aria-label="{{ esc_attr($sp['title']) }}"
              itemscope itemtype="https://schema.org/RealEstateListing">
 
             <div class="sv-spotlight__mini-img">
               @if($sp['thumbnail'])
-                <img src="{{ $sp['thumbnail'] }}" alt="{{ esc_attr($sp['title']) }}" loading="lazy" itemprop="image">
+                <img src="{{ esc_url($sp['thumbnail']) }}" alt="{{ esc_attr($sp['title']) }}" loading="lazy" itemprop="image">
               @else
                 <div class="sv-spotlight__mini-img--placeholder"></div>
               @endif

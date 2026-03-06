@@ -16,10 +16,15 @@ import.meta.glob([
   onScroll();
 
   // Mark active nav link by URL prefix
-  const current = window.location.href.split('?')[0].replace(/\/$/, '');
+  const current = window.location.href.split('?')[0].replace(/\/$/, '') || window.location.origin;
+  const origin = window.location.origin;
   header.querySelectorAll('.sv-nav a').forEach(a => {
-    const href = a.href.split('?')[0].replace(/\/$/, '');
-    if (href && href !== window.location.origin && current.startsWith(href)) {
+    const href = a.href.split('?')[0].replace(/\/$/, '') || origin;
+    const isHomeLink = href === origin;
+    const isActive = isHomeLink
+      ? current === origin
+      : (href && current.startsWith(href));
+    if (isActive) {
       a.classList.add('active');
     }
   });

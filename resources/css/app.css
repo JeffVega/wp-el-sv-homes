@@ -262,6 +262,13 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--color-sv-gold);
 }
 
+.sv-header__logo-img {
+  display: block;
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .sv-nav {
   display: flex;
   align-items: center;

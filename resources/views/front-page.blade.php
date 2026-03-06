@@ -24,11 +24,11 @@
         🇸🇻 {{ __('El Salvador — Land of Progress', 'sage') }}
       </div>
 
-      <h1 class="sv-hero__title sv-fade-up sv-fade-up--delay-1">
+      <h1 id="sv-hero-title" class="sv-hero__title sv-fade-up sv-fade-up--delay-1">
         {!! nl2br(esc_html($heroTitle)) !!}
       </h1>
 
-      <p class="sv-hero__subtitle sv-fade-up sv-fade-up--delay-2">
+      <p id="sv-hero-subtitle" class="sv-hero__subtitle sv-fade-up sv-fade-up--delay-2">
         {{ $heroSubtitle }}
       </p>
     </div>
