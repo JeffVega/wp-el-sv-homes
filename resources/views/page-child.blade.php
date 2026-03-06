@@ -1,5 +1,6 @@
 {{--
   Template Name: Child Page
+  Template Post Type: page, location
   Cinematic hero (featured image or navy gradient fallback),
   breadcrumbs, H1 title, and an editorial content column.
 --}}

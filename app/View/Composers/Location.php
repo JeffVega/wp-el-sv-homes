@@ -10,19 +10,13 @@ class Location extends Composer
 
     public function with(): array
     {
-        $termSlug  = get_post_meta(get_the_ID(), '_sv_location_term_slug', true) ?: '';
-        $ptypeSlug = get_query_var('sv_ptype', '');
-        $filters   = $this->getCurrentFilters();
-        $query     = $this->buildPropertyQuery($termSlug, $ptypeSlug, $filters);
+        $termSlug = get_post_meta(get_the_ID(), '_sv_location_term_slug', true) ?: '';
+        $filters  = $this->getCurrentFilters();
+        $query    = $this->buildPropertyQuery($termSlug, $filters);
 
-        $activePropertyType = $ptypeSlug
-            ? get_term_by('slug', $ptypeSlug, 'property_type')
+        $activePropertyType = $filters['type']
+            ? get_term_by('slug', $filters['type'], 'property_type')
             : null;
-
-        $formAction = (string) get_permalink();
-        if ($activePropertyType) {
-            $formAction = trailingslashit($formAction) . $activePropertyType->slug . '/';
-        }
 
         return [
             'termSlug'           => $termSlug,
@@ -33,12 +27,12 @@ class Location extends Composer
             'propertyTypes'      => $this->getTerms('property_type'),
             'propertyStatus'     => $this->getTerms('property_status'),
             'currentFilters'     => $filters,
-            'formAction'         => $formAction,
+            'formAction'         => (string) get_permalink(),
             'whatsappGlobal'     => get_option('sv_whatsapp_global', ''),
         ];
     }
 
-    private function buildPropertyQuery(string $termSlug, string $ptypeSlug, array $filters): \WP_Query
+    private function buildPropertyQuery(string $termSlug, array $filters): \WP_Query
     {
         if (! $termSlug) {
             return new \WP_Query(['post_type' => 'property', 'posts_per_page' => 0]);
@@ -56,12 +50,6 @@ class Location extends Composer
             ],
         ];
 
-        if ($ptypeSlug) {
-            $args['tax_query'][]         = ['taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $ptypeSlug];
-            $args['tax_query']['relation'] = 'AND';
-        }
-
-        // Orderby
         $orderby = sanitize_key($_GET['orderby'] ?? '');
         if ($orderby === 'meta_value_num') {
             $args['orderby']  = 'meta_value_num';
@@ -69,7 +57,6 @@ class Location extends Composer
             $args['order']    = strtoupper(sanitize_key($_GET['order'] ?? 'ASC')) === 'DESC' ? 'DESC' : 'ASC';
         }
 
-        // Meta filters
         $metaQuery = [];
         if ($filters['min'] !== '') {
             $metaQuery[] = ['key' => '_sv_price', 'value' => (int) $filters['min'], 'compare' => '>=', 'type' => 'NUMERIC'];
@@ -85,8 +72,7 @@ class Location extends Composer
             $args['meta_query']    = $metaQuery;
         }
 
-        // Additional taxonomy filters from query params
-        if (! $ptypeSlug && $filters['type']) {
+        if ($filters['type']) {
             $args['tax_query'][]         = ['taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $filters['type']];
             $args['tax_query']['relation'] = 'AND';
         }

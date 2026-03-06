@@ -147,99 +147,10 @@ add_action('after_setup_theme', function () {
  */
 add_action('init', [Property::class, 'register']);
 add_action('init', [Location::class, 'register']);
+
 PropertyMeta::register();
 LocationMeta::register();
 
-/**
- * Register custom query vars for location routing.
- */
-add_filter('query_vars', function (array $vars): array {
-    $vars[] = 'sv_ptype';
-    $vars[] = 'sv_loc_slug';
-    return $vars;
-});
-
-
-/**
- * Route /{city} and /{city}/{property-type} to the Location CPT.
- *
- * When our rewrite rules match, sv_loc_slug (and optionally sv_ptype) are set.
- * When WordPress sets pagename (e.g. from the page rule), we also handle that.
- * If the slug is a published location post, we set query vars so the location
- * single template loads; otherwise we pass through as pagename for normal pages.
- */
-add_filter('request', function (array $query_vars): array {
-    $locSlug = isset($query_vars['sv_loc_slug']) ? $query_vars['sv_loc_slug'] : null;
-    $ptype   = isset($query_vars['sv_ptype']) ? $query_vars['sv_ptype'] : null;
-
-    if ($locSlug !== null && $locSlug !== '') {
-        $location = get_page_by_path($locSlug, OBJECT, 'location');
-        if ($location) {
-            if ($ptype !== null && $ptype !== '') {
-                $term = get_term_by('slug', $ptype, 'property_type');
-                if ($term) {
-                    unset($query_vars['sv_loc_slug'], $query_vars['sv_ptype']);
-                    $query_vars['post_type'] = 'location';
-                    $query_vars['name']      = $locSlug;
-                    $query_vars['sv_ptype']  = $ptype;
-                    return $query_vars;
-                }
-            }
-            unset($query_vars['sv_loc_slug'], $query_vars['sv_ptype']);
-            $query_vars['post_type'] = 'location';
-            $query_vars['name']      = $locSlug;
-            return $query_vars;
-        }
-        // Not a location: pass through as pagename so WordPress can resolve as page.
-        unset($query_vars['sv_loc_slug']);
-        $query_vars['pagename'] = $ptype !== null && $ptype !== '' ? $locSlug . '/' . $ptype : $locSlug;
-        unset($query_vars['sv_ptype']);
-        return $query_vars;
-    }
-
-    if (isset($query_vars['pagename'])) {
-        $segments = explode('/', trim($query_vars['pagename'], '/'));
-
-        if (count($segments) === 1) {
-            $location = get_page_by_path($segments[0], OBJECT, 'location');
-            if ($location) {
-                unset($query_vars['pagename']);
-                $query_vars['post_type'] = 'location';
-                $query_vars['name']      = $segments[0];
-            }
-        } elseif (count($segments) === 2) {
-            $location = get_page_by_path($segments[0], OBJECT, 'location');
-            $term     = $location ? get_term_by('slug', $segments[1], 'property_type') : null;
-            if ($location && $term) {
-                unset($query_vars['pagename']);
-                $query_vars['post_type'] = 'location';
-                $query_vars['name']      = $segments[0];
-                $query_vars['sv_ptype']  = $segments[1];
-            }
-        }
-    }
-
-    // Single-segment /{city}: WordPress may set 'name' (post rule) instead of pagename.
-    if (isset($query_vars['name']) && $query_vars['name'] !== ''
-        && (empty($query_vars['post_type']) || $query_vars['post_type'] === 'post')) {
-        $location = get_page_by_path($query_vars['name'], OBJECT, 'location');
-        if ($location) {
-            $query_vars['post_type'] = 'location';
-        }
-    }
-
-    return $query_vars;
-});
-
-/**
- * Generate clean /{city}/ permalinks for location posts.
- */
-add_filter('post_type_link', function (string $link, \WP_Post $post): string {
-    if ($post->post_type === 'location') {
-        return home_url('/' . $post->post_name . '/');
-    }
-    return $link;
-}, 10, 2);
 
 /**
  * Filter property archive queries to support custom search/filter params.
