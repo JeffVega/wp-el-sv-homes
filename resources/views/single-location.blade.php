@@ -90,26 +90,6 @@
   </section>
 @endif
 
-{{-- ── PROPERTY TYPE NAV ────────────────────────────────────── --}}
-@if(!empty($propertyTypes))
-  <nav class="sv-container py-4" aria-label="{{ __('Property types', 'sage') }}">
-    <div class="flex flex-wrap gap-2 items-center">
-      <a href="{{ get_permalink() }}"
-         class="inline-block px-4 py-1.5 rounded-full text-sm font-semibold transition
-                {{ !$activePropertyType ? 'bg-sv-navy text-white' : 'bg-gray-100 text-sv-navy hover:bg-gray-200' }}">
-        {{ __('All', 'sage') }}
-      </a>
-      @foreach($propertyTypes as $ptype)
-        <a href="{{ trailingslashit(get_permalink()) . $ptype->slug . '/' }}"
-           class="inline-block px-4 py-1.5 rounded-full text-sm font-semibold transition
-                  {{ $activePropertyType && $activePropertyType->slug === $ptype->slug ? 'bg-sv-navy text-white' : 'bg-gray-100 text-sv-navy hover:bg-gray-200' }}">
-          {{ $ptype->name }}
-        </a>
-      @endforeach
-    </div>
-  </nav>
-@endif
-
 {{-- ── PROPERTIES ──────────────────────────────────────────── --}}
 <section class="sv-loc-properties">
   <div class="sv-container">
