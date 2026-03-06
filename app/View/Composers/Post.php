@@ -42,7 +42,7 @@ class Post extends Composer
             return sprintf(
                 /* translators: %s is replaced with the search query */
                 __('Search Results for %s', 'sage'),
-                get_search_query()
+                esc_html(get_search_query())
             );
         }
 

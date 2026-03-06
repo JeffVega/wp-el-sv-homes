@@ -36,6 +36,11 @@ add_action('admin_post_sv_property_inquiry', function () {
         wp_die(__('Security check failed.', 'sage'));
     }
 
+    if (! empty($_POST['sv_hp_field'])) {
+        wp_safe_redirect(home_url('/'));
+        exit;
+    }
+
     $propId    = intval($_POST['property_id'] ?? 0);
     $propTitle = sanitize_text_field($_POST['property_title'] ?? '');
     $name      = sanitize_text_field($_POST['inq_name'] ?? '');
@@ -49,13 +54,18 @@ add_action('admin_post_sv_property_inquiry', function () {
         exit;
     }
 
+    if (get_post_type($propId) !== 'property' || get_post_status($propId) !== 'publish') {
+        wp_die(__('Invalid property.', 'sage'));
+    }
+
     $to      = get_option('admin_email');
     $subject = sprintf(__('New Inquiry: %s', 'sage'), $propTitle);
     $body    = "Property: {$propTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}";
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
 
     if ($email) {
-        $headers[] = "Reply-To: {$name} <{$email}>";
+        $safeName = str_replace(['<', '>', '"'], '', $name);
+        $headers[] = "Reply-To: {$safeName} <{$email}>";
     }
 
     wp_mail($to, $subject, $body, $headers);
@@ -79,6 +89,11 @@ add_action('admin_post_sv_contact_form', function () {
         wp_die(__('Security check failed.', 'sage'));
     }
 
+    if (! empty($_POST['sv_hp_field'])) {
+        wp_safe_redirect(home_url('/'));
+        exit;
+    }
+
     $name     = sanitize_text_field($_POST['contact_name'] ?? '');
     $last     = sanitize_text_field($_POST['contact_lastname'] ?? '');
     $email    = sanitize_email($_POST['contact_email'] ?? '');
@@ -87,15 +102,21 @@ add_action('admin_post_sv_contact_form', function () {
     $message  = sanitize_textarea_field($_POST['contact_message'] ?? '');
     $redirect = esc_url_raw($_POST['redirect_to'] ?? home_url('/'));
 
+    $allowedSubjects = ['', 'comprar', 'alquilar', 'vender', 'invertir', 'otro'];
+    if (! in_array($subject, $allowedSubjects, true)) {
+        $subject = '';
+    }
+
     if (empty($name) || empty($email) || empty($message)) {
         wp_safe_redirect(add_query_arg('contact_sent', 'error', $redirect));
         exit;
     }
 
-    $to      = get_option('admin_email');
-    $subLine = sprintf(__('Contact from: %s %s', 'sage'), $name, $last);
-    $body    = "Name: {$name} {$last}\nEmail: {$email}\nPhone: {$phone}\nSubject: {$subject}\n\nMessage:\n{$message}";
-    $headers = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: {$name} <{$email}>"];
+    $safeName = str_replace(['<', '>', '"'], '', $name);
+    $to       = get_option('admin_email');
+    $subLine  = sprintf(__('Contact from: %s %s', 'sage'), $name, $last);
+    $body     = "Name: {$name} {$last}\nEmail: {$email}\nPhone: {$phone}\nSubject: {$subject}\n\nMessage:\n{$message}";
+    $headers  = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: {$safeName} <{$email}>"];
 
     wp_mail($to, $subLine, $body, $headers);
 

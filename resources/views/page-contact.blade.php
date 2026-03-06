@@ -28,7 +28,7 @@
           {{ __('Our team will respond to you as soon as possible.', 'sage') }}
         </p>
 
-        @if(isset($_GET['contact_sent']) && $_GET['contact_sent'] === '1')
+        @if(sanitize_text_field($_GET['contact_sent'] ?? '') === '1')
           <div class="sv-notice sv-notice--success">
             ✅ {{ __('Message sent! We will be in touch soon.', 'sage') }}
           </div>
@@ -38,6 +38,7 @@
           @php(wp_nonce_field('sv_contact_form', 'sv_contact_nonce'))
           <input type="hidden" name="action" value="sv_contact_form">
           <input type="hidden" name="redirect_to" value="{{ home_url('/contact?contact_sent=1') }}">
+          <div aria-hidden="true" style="position:absolute;left:-9999px;"><input type="text" name="sv_hp_field" tabindex="-1" autocomplete="off" value=""></div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div class="sv-form-group mb-0">

@@ -5,6 +5,11 @@
 @php
   $compact    = $compact ?? false;
   $archiveUrl = sv_property_search_url();
+  $fKeyword   = sanitize_text_field($_GET['keyword'] ?? '');
+  $fStatus    = sanitize_text_field($_GET['property_status'] ?? '');
+  $fType      = sanitize_text_field($_GET['property_type'] ?? '');
+  $fLocation  = sanitize_text_field($_GET['location'] ?? '');
+  $fMaxPrice  = sanitize_text_field($_GET['max_price'] ?? '');
 @endphp
 
 @if($compact)
@@ -23,7 +28,7 @@
           type="text"
           id="sv-search-keyword"
           name="keyword"
-          value="{{ sanitize_text_field($_GET['keyword'] ?? '') }}"
+          value="{{ $fKeyword }}"
           placeholder="{{ __('House, apartment, land…', 'sage') }}"
           autocomplete="off"
         >
@@ -37,7 +42,7 @@
           <option value="">{{ __('Any', 'sage') }}</option>
           @if(!empty($statuses))
             @foreach($statuses as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['property_status'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fStatus === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -56,7 +61,7 @@
           <option value="">{{ __('All types', 'sage') }}</option>
           @if(!empty($types))
             @foreach($types as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['property_type'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fType === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -72,7 +77,7 @@
           <option value="">{{ __('All of El Salvador', 'sage') }}</option>
           @if(!empty($locations))
             @foreach($locations as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['location'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fLocation === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -104,7 +109,7 @@
           type="text"
           id="sv-search-keyword"
           name="keyword"
-          value="{{ sanitize_text_field($_GET['keyword'] ?? '') }}"
+          value="{{ $fKeyword }}"
           placeholder="{{ __('House, apartment, land…', 'sage') }}"
           autocomplete="off"
         >
@@ -118,7 +123,7 @@
           <option value="">{{ __('Any', 'sage') }}</option>
           @if(!empty($statuses))
             @foreach($statuses as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['property_status'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fStatus === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -137,7 +142,7 @@
           <option value="">{{ __('All types', 'sage') }}</option>
           @if(!empty($types))
             @foreach($types as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['property_type'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fType === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -153,7 +158,7 @@
           <option value="">{{ __('All of El Salvador', 'sage') }}</option>
           @if(!empty($locations))
             @foreach($locations as $term)
-              <option value="{{ $term->slug }}" {{ (($_GET['location'] ?? '') === $term->slug) ? 'selected' : '' }}>
+              <option value="{{ $term->slug }}" {{ ($fLocation === $term->slug) ? 'selected' : '' }}>
                 {{ $term->name }}
               </option>
             @endforeach
@@ -167,11 +172,11 @@
         <label for="sv-search-price">{{ __('Max Price', 'sage') }}</label>
         <select id="sv-search-price" name="max_price">
           <option value="">{{ __('Any', 'sage') }}</option>
-          <option value="50000" {{ (($_GET['max_price'] ?? '') === '50000') ? 'selected' : '' }}>&le; $50k</option>
-          <option value="100000" {{ (($_GET['max_price'] ?? '') === '100000') ? 'selected' : '' }}>&le; $100k</option>
-          <option value="150000" {{ (($_GET['max_price'] ?? '') === '150000') ? 'selected' : '' }}>&le; $150k</option>
-          <option value="250000" {{ (($_GET['max_price'] ?? '') === '250000') ? 'selected' : '' }}>&le; $250k</option>
-          <option value="500000" {{ (($_GET['max_price'] ?? '') === '500000') ? 'selected' : '' }}>&le; $500k</option>
+          <option value="50000" {{ ($fMaxPrice === '50000') ? 'selected' : '' }}>&le; $50k</option>
+          <option value="100000" {{ ($fMaxPrice === '100000') ? 'selected' : '' }}>&le; $100k</option>
+          <option value="150000" {{ ($fMaxPrice === '150000') ? 'selected' : '' }}>&le; $150k</option>
+          <option value="250000" {{ ($fMaxPrice === '250000') ? 'selected' : '' }}>&le; $250k</option>
+          <option value="500000" {{ ($fMaxPrice === '500000') ? 'selected' : '' }}>&le; $500k</option>
         </select>
       </div>
     </div>

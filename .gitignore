@@ -3,4 +3,7 @@
 /public/*
 !/public/.gitkeep
 .env
+.env.*
+.env.local
+.env.*.local
 npm-debug.log

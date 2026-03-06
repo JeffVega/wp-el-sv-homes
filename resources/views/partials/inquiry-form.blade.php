@@ -10,11 +10,12 @@
   $waMsg     = urlencode(__('Hello, I\'m interested in the property: ', 'sage') . $propTitle . ' - ' . get_permalink($propId));
 @endphp
 
-@if(isset($_GET['inquiry_sent']) && $_GET['inquiry_sent'] === '1')
+@php($inquiryStatus = sanitize_text_field($_GET['inquiry_sent'] ?? ''))
+@if($inquiryStatus === '1')
   <div class="sv-notice sv-notice--success">
     ✅ {{ __('Thank you! We will be in touch soon.', 'sage') }}
   </div>
-@elseif(isset($_GET['inquiry_sent']) && $_GET['inquiry_sent'] === 'error')
+@elseif($inquiryStatus === 'error')
   <div class="sv-notice sv-notice--error">
     ⚠️ {{ __('There was an error. Please try again.', 'sage') }}
   </div>
@@ -31,6 +32,7 @@
   <input type="hidden" name="property_id" value="{{ $propId }}">
   <input type="hidden" name="property_title" value="{{ esc_attr($propTitle) }}">
   <input type="hidden" name="redirect_to" value="{{ get_permalink($propId) }}">
+  <div aria-hidden="true" style="position:absolute;left:-9999px;"><input type="text" name="sv_hp_field" tabindex="-1" autocomplete="off" value=""></div>
 
   <div class="sv-form-group">
     <label class="sv-form-label" for="inq-name">{{ __('Full name', 'sage') }} <span style="color:#dc2626;">*</span></label>
