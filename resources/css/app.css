@@ -650,85 +650,147 @@ img { max-width: 100%; height: auto; display: block; }
   }
 }
 
-.sv-search-bar__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.75rem;
-}
+/* (Legacy __row rules removed — both variants now use __fields + __divider) */
 
-.sv-search-bar__row--main {
-  gap: 0.75rem;
-  align-items: flex-end;
-}
-
-.sv-search-bar__row--main .sv-search-field--keyword {
-  flex: 1;
-  min-width: 200px;
-}
-
-.sv-search-bar__row--main .sv-btn-search {
-  flex-shrink: 0;
-  min-height: auto;
-}
-
-.sv-search-bar__row--filters .sv-search-field {
-  flex: 1;
-  min-width: 120px;
-  max-width: 160px;
-}
-
-.sv-search-bar__row--filters .sv-search-field__label,
-.sv-search-bar__row--filters .sv-search-field label {
-  font-size: 0.65rem;
-}
-
-.sv-search-bar__row--filters select {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.85rem;
-}
-
-/* Compact (archive) layout: one bar, main + filters rows side by side */
+/* Compact (archive) layout: single-row bar with dividers */
 .sv-search-bar--compact {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.75rem;
+  align-items: stretch;
+  flex-direction: row;
+  gap: 0;
   max-width: 100%;
+  background: #fff;
+  border: 1px solid var(--color-sv-stone-light);
+  border-radius: 0.875rem;
+  padding: 0.3rem;
+  box-shadow: 0 2px 12px rgba(0, 15, 45, 0.06);
 }
 
-.sv-search-bar--compact .sv-search-bar__row {
+.sv-search-bar--compact .sv-search-bar__fields {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.5rem;
-}
-
-.sv-search-bar--compact .sv-search-bar__row--main {
-  flex: 1 1 220px;
-  min-width: 0;
-  align-items: flex-end;
-}
-
-.sv-search-bar--compact .sv-search-bar__row--main .sv-search-field--keyword {
-  min-width: 0;
   flex: 1;
+  align-items: stretch;
+  min-width: 0;
 }
 
-.sv-search-bar--compact .sv-search-bar__row--filters {
-  flex: 2 1 280px;
+.sv-search-bar--compact .sv-search-field {
+  flex: 1;
+  min-width: 0;
+  padding: 0.625rem 0.875rem;
+  gap: 0.15rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
 }
 
-.sv-search-bar--compact .sv-search-bar__row--filters .sv-search-field {
-  min-width: 100px;
-  max-width: 140px;
+.sv-search-bar--compact .sv-search-field:hover {
+  background: rgba(27, 58, 138, 0.03);
+}
+
+.sv-search-bar--compact .sv-search-field:focus-within {
+  background: rgba(27, 58, 138, 0.04);
+}
+
+.sv-search-bar--compact .sv-search-field--keyword {
+  flex: 1.5;
+}
+
+.sv-search-bar--compact .sv-search-field label,
+.sv-search-bar--compact .sv-search-field__label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-sv-blue);
+  opacity: 0.6;
+}
+
+.sv-search-bar--compact .sv-search-field select,
+.sv-search-bar--compact .sv-search-field input {
+  border: none;
+  background: transparent;
+  padding: 0.1rem 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-sv-navy);
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.sv-search-bar--compact .sv-search-field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238D7B6A' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 1rem;
+  cursor: pointer;
+}
+
+.sv-search-bar--compact .sv-search-field input::placeholder {
+  color: var(--color-sv-stone);
+  font-weight: 400;
+}
+
+.sv-search-bar--compact .sv-search-field select:focus,
+.sv-search-bar--compact .sv-search-field input:focus {
+  outline: none;
+}
+
+.sv-search-bar--compact .sv-search-bar__divider {
+  width: 1px;
+  background: var(--color-sv-stone-light);
+  margin-block: 0.5rem;
+  flex-shrink: 0;
 }
 
 .sv-search-bar--compact .sv-btn-search {
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.25rem;
   flex-shrink: 0;
-  min-height: auto;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  align-self: stretch;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 860px) {
+  .sv-search-bar--compact {
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    gap: 0;
+  }
+
+  .sv-search-bar--compact .sv-search-bar__fields {
+    flex-wrap: wrap;
+  }
+
+  .sv-search-bar--compact .sv-search-field--keyword {
+    flex: 1 0 100%;
+    border-bottom: 1px solid var(--color-sv-stone-light);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0;
+  }
+
+  .sv-search-bar--compact .sv-search-bar__divider {
+    display: none;
+  }
+
+  .sv-search-bar--compact .sv-search-field:not(.sv-search-field--keyword) {
+    flex: 1 1 45%;
+    min-width: 110px;
+  }
+
+  .sv-search-bar--compact .sv-btn-search {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+    border-radius: var(--radius-btn);
+  }
+}
+
+@media (max-width: 480px) {
+  .sv-search-bar--compact .sv-search-field:not(.sv-search-field--keyword) {
+    flex: 1 0 100%;
+  }
 }
 
 .sv-search-field {
@@ -2825,54 +2887,6 @@ textarea.sv-form-control {
    ============================================================ */
 
 @media (max-width: 600px) {
-  .sv-search-bar--sandwich .sv-search-bar__row--main {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .sv-search-bar--sandwich .sv-search-field--keyword {
-    min-width: 0;
-  }
-
-  /* Stack filters vertically on mobile for readability */
-  .sv-search-bar__row--filters {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .sv-search-bar__row--filters .sv-search-field {
-    min-width: 0;
-    max-width: none;
-    flex: none;
-    width: 100%;
-  }
-
-  /* Compact bar: stack main row and filters row; full-width filter fields so select text doesn’t truncate */
-  .sv-search-bar--compact {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .sv-search-bar--compact .sv-search-bar__row--main,
-  .sv-search-bar--compact .sv-search-bar__row--filters {
-    flex: none;
-    width: 100%;
-  }
-
-  .sv-search-bar--compact .sv-search-bar__row--filters .sv-search-field {
-    max-width: none;
-    min-width: 0;
-  }
-
-  /* Full-width selects on mobile so “All of El Salvador” etc. aren’t cut off */
-  .sv-search-bar__row--filters select {
-    width: 100%;
-    min-width: 0;
-    padding-right: 2.25rem;
-    box-sizing: border-box;
-  }
-
   .sv-hero__stats {
     gap: 1.5rem;
   }

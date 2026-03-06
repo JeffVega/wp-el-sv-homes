@@ -8,7 +8,7 @@
 @endphp
 
 @if($compact)
-  {{-- Compact layout (archive pages) --}}
+  {{-- Compact layout (archive pages): single-row bar with dividers --}}
   <form
     action="{{ $archiveUrl }}"
     method="GET"
@@ -16,9 +16,9 @@
     role="search"
     aria-label="{{ __('Search properties', 'sage') }}"
   >
-    <div class="sv-search-bar__row sv-search-bar__row--main">
+    <div class="sv-search-bar__fields">
       <div class="sv-search-field sv-search-field--keyword">
-        <label for="sv-search-keyword" class="sv-search-field__label">{{ __('What are you looking for?', 'sage') }}</label>
+        <label for="sv-search-keyword">{{ __('Keyword', 'sage') }}</label>
         <input
           type="text"
           id="sv-search-keyword"
@@ -28,17 +28,11 @@
           autocomplete="off"
         >
       </div>
-      <button type="submit" class="sv-btn-search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        {{ __('Search Properties', 'sage') }}
-      </button>
-    </div>
 
-    <div class="sv-search-bar__row sv-search-bar__row--filters">
+      <div class="sv-search-bar__divider" aria-hidden="true"></div>
+
       <div class="sv-search-field">
-        <label for="sv-search-status" class="sv-search-field__label">{{ __('Sale or rent', 'sage') }}</label>
+        <label for="sv-search-status">{{ __('Status', 'sage') }}</label>
         <select id="sv-search-status" name="property_status">
           <option value="">{{ __('Any', 'sage') }}</option>
           @if(!empty($statuses))
@@ -53,8 +47,11 @@
           @endif
         </select>
       </div>
+
+      <div class="sv-search-bar__divider" aria-hidden="true"></div>
+
       <div class="sv-search-field">
-        <label for="sv-search-type" class="sv-search-field__label">{{ __('Type', 'sage') }}</label>
+        <label for="sv-search-type">{{ __('Type', 'sage') }}</label>
         <select id="sv-search-type" name="property_type">
           <option value="">{{ __('All types', 'sage') }}</option>
           @if(!empty($types))
@@ -66,8 +63,11 @@
           @endif
         </select>
       </div>
+
+      <div class="sv-search-bar__divider" aria-hidden="true"></div>
+
       <div class="sv-search-field">
-        <label for="sv-search-location" class="sv-search-field__label">{{ __('Department', 'sage') }}</label>
+        <label for="sv-search-location">{{ __('Location', 'sage') }}</label>
         <select id="sv-search-location" name="location">
           <option value="">{{ __('All of El Salvador', 'sage') }}</option>
           @if(!empty($locations))
@@ -80,6 +80,13 @@
         </select>
       </div>
     </div>
+
+    <button type="submit" class="sv-btn-search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      {{ __('Search', 'sage') }}
+    </button>
   </form>
 @else
   {{-- Hero layout: full-width single-row bar --}}
