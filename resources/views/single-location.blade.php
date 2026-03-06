@@ -106,8 +106,6 @@
     <nav class="sv-loc-hero__nav" aria-label="{{ __('Breadcrumb', 'sage') }}">
       <a href="{{ home_url('/') }}">{{ __('Home', 'sage') }}</a>
       <span>›</span>
-      <a href="{{ get_post_type_archive_link('property') }}">{{ __('Properties', 'sage') }}</a>
-      <span>›</span>
       @if($activePropertyType)
         <a href="{{ get_permalink() }}">{{ $cityName }}</a>
         <span>›</span>

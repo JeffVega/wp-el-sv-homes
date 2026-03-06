@@ -151,6 +151,40 @@ add_action('init', [Location::class, 'register']);
 PropertyMeta::register();
 LocationMeta::register();
 
+/**
+ * Generate /{slug}/ and /{parent}/{child}/ permalinks for locations.
+ *
+ * Uses get_page_uri() — the same core function WordPress uses for pages.
+ */
+add_filter('post_type_link', function (string $link, \WP_Post $post): string {
+    if ($post->post_type === 'location') {
+        return home_url('/' . get_page_uri($post) . '/');
+    }
+    return $link;
+}, 10, 2);
+
+/**
+ * Resolve incoming URLs as locations when they match.
+ *
+ * Hooks into parse_request and reads the raw URL path ($wp->request)
+ * directly — no dependency on which rewrite rule matched or whether
+ * pagename/name was set. Uses get_page_by_path() which handles
+ * hierarchical parent/child resolution natively (same as pages).
+ */
+add_action('parse_request', function (\WP $wp): void {
+    $path = trim($wp->request ?? '', '/');
+    if (! $path || is_admin()) {
+        return;
+    }
+
+    $location = get_page_by_path($path, OBJECT, 'location');
+    if ($location) {
+        $wp->query_vars = [
+            'post_type' => 'location',
+            'p'         => $location->ID,
+        ];
+    }
+});
 
 /**
  * Filter property archive queries to support custom search/filter params.
