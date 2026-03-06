@@ -3,17 +3,26 @@ import.meta.glob([
   '../fonts/**',
 ]);
 
-// ─── Header scroll effect ────────────────────────────────────
+// ─── Header: scroll blur + active nav link ───────────────────
 (function initHeader() {
   const header = document.getElementById('sv-header');
   if (!header) return;
 
+  // Scroll-aware blur
   const onScroll = () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
+    header.classList.toggle('is-scrolled', window.scrollY > 50);
   };
-
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // Mark active nav link by URL prefix
+  const current = window.location.href.split('?')[0].replace(/\/$/, '');
+  header.querySelectorAll('.sv-nav a').forEach(a => {
+    const href = a.href.split('?')[0].replace(/\/$/, '');
+    if (href && href !== window.location.origin && current.startsWith(href)) {
+      a.classList.add('active');
+    }
+  });
 })();
 
 // ─── Mobile nav toggle ───────────────────────────────────────

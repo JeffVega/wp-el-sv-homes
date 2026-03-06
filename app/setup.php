@@ -7,7 +7,9 @@
 namespace App;
 
 use App\PostTypes\Property;
+use App\PostTypes\Location;
 use App\MetaBoxes\PropertyMeta;
+use App\MetaBoxes\LocationMeta;
 use Illuminate\Support\Facades\Vite;
 
 /**
@@ -144,7 +146,9 @@ add_action('after_setup_theme', function () {
  * Register Property CPT and meta boxes.
  */
 add_action('init', [Property::class, 'register']);
+add_action('init', [Location::class, 'register']);
 PropertyMeta::register();
+LocationMeta::register();
 
 /**
  * Filter property archive queries to support custom search/filter params.

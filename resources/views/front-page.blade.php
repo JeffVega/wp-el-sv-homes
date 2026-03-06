@@ -57,18 +57,23 @@
     </div>
   </div>
 
-  <div class="sv-hero__flag-bar"></div>
+  <div class="sv-hero__wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,55 C200,10 420,75 720,45 C1000,15 1240,65 1440,38 L1440,80 L0,80 Z" fill="#FDFAF4"/>
+    </svg>
+  </div>
 </section>
 
 
 {{-- ═══════════════════════════════════════════════════════════
      PROPERTY TYPES QUICK-FILTER
 ═══════════════════════════════════════════════════════════ --}}
-<section class="sv-section-sm" style="background:var(--color-sv-cream);">
+<section class="sv-section-sm sv-section--cream">
   <div class="sv-container">
     <div class="sv-section-header sv-section-header--center" style="margin-bottom:2rem;">
       <div class="sv-section-eyebrow">{{ __('Explore by category', 'sage') }}</div>
       <h2 class="sv-section-title">{{ __('What type of property are you looking for?', 'sage') }}</h2>
+      <p class="sv-section-subtitle" style="margin-top:0.5rem;">{{ __('Houses, apartments, land & lots, and more across El Salvador.', 'sage') }}</p>
     </div>
 
     <div class="sv-type-grid">
@@ -129,15 +134,41 @@
 
 
 {{-- ═══════════════════════════════════════════════════════════
+     EXPLORE BY LOCATION (14 DEPARTMENTS)
+═══════════════════════════════════════════════════════════ --}}
+@if(!empty($locations))
+<section class="sv-section-sm sv-section--white">
+  <div class="sv-container">
+    <div class="sv-section-header sv-section-header--center" style="margin-bottom:2rem;">
+      <div class="sv-section-eyebrow">{{ __('Explore by location', 'sage') }}</div>
+      <h2 class="sv-section-title">{{ __('Properties by department', 'sage') }}</h2>
+      <p class="sv-section-subtitle" style="margin-top:0.5rem;">{{ __('Browse houses, land and apartments in each of the 14 departments.', 'sage') }}</p>
+    </div>
+
+    <div class="sv-type-grid">
+      @foreach($locations as $loc)
+        <a href="{{ $loc['link'] }}" class="sv-type-card">
+          <div class="sv-type-card__icon">📍</div>
+          <div class="sv-type-card__name">{{ $loc['name'] }}</div>
+          <div class="sv-type-card__count">{{ $loc['count'] }} {{ __('properties', 'sage') }}</div>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+
+
+{{-- ═══════════════════════════════════════════════════════════
      FEATURED PROPERTIES
 ═══════════════════════════════════════════════════════════ --}}
 @if(!empty($featuredProperties))
-<section class="sv-section" style="background:#fff;">
+<section class="sv-section sv-section--white">
   <div class="sv-container">
-    <div class="sv-section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div class="sv-section-header sv-section-header--split">
       <div>
         <div class="sv-section-eyebrow">{{ __('Special selection', 'sage') }}</div>
-        <h2 class="sv-section-title">⭐ {{ __('Featured Properties', 'sage') }}</h2>
+        <h2 class="sv-section-title">{{ __('Featured Properties', 'sage') }}</h2>
       </div>
       <a href="{{ get_post_type_archive_link('property') }}" class="sv-btn sv-btn-outline sv-btn-sm">
         {{ __('View all', 'sage') }}
@@ -158,7 +189,7 @@
 {{-- ═══════════════════════════════════════════════════════════
      WHY CHOOSE US — Cultural / Trust Section
 ═══════════════════════════════════════════════════════════ --}}
-<section class="sv-section" style="background:var(--color-sv-cream);">
+<section class="sv-section sv-section--cream">
   <div class="sv-container">
     <div class="sv-section-header sv-section-header--center">
       <div class="sv-section-eyebrow">{{ __('Why choose us', 'sage') }}</div>
@@ -198,9 +229,9 @@
      LATEST PROPERTIES
 ═══════════════════════════════════════════════════════════ --}}
 @if(!empty($latestProperties))
-<section class="sv-section" style="background:#fff;">
+<section class="sv-section sv-section--white">
   <div class="sv-container">
-    <div class="sv-section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div class="sv-section-header sv-section-header--split">
       <div>
         <div class="sv-section-eyebrow">{{ __('Just added', 'sage') }}</div>
         <h2 class="sv-section-title">{{ __('Recent Properties', 'sage') }}</h2>
@@ -225,12 +256,12 @@
      CTA — El Salvador Cultural Banner
 ═══════════════════════════════════════════════════════════ --}}
 <section class="sv-cta-banner">
-  <div class="sv-container" style="position:relative;z-index:2;">
+  <div class="sv-container">
     <div style="max-width:680px;">
       <div class="sv-section-eyebrow" style="color:var(--color-sv-gold-light);">
         {{ __('Ready for your new home?', 'sage') }}
       </div>
-      <h2 style="font-family:var(--font-display);font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:800;color:#fff;margin-bottom:1rem;">
+      <h2 class="sv-cta-banner__title">
         {{ __('Find your ideal property in El Salvador today', 'sage') }}
       </h2>
       <p style="color:rgba(255,255,255,0.78);font-size:1.05rem;margin-bottom:2rem;line-height:1.7;">
@@ -267,7 +298,7 @@
   $recentPosts = get_posts(['numberposts' => 3, 'post_status' => 'publish']);
 @endphp
 @if(!empty($recentPosts))
-<section class="sv-section" style="background:var(--color-sv-cream);">
+<section class="sv-section sv-section--cream">
   <div class="sv-container">
     <div class="sv-section-header sv-section-header--center">
       <div class="sv-section-eyebrow">{{ __('Tips and news', 'sage') }}</div>

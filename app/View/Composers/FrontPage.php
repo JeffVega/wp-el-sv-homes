@@ -19,6 +19,7 @@ class FrontPage extends Composer
             'heroSubtitle'       => get_option('sv_hero_subtitle', 'Discover the best properties in the land of progress'),
             'whatsappGlobal'     => get_option('sv_whatsapp_global', ''),
             'propertyTypes'      => $this->getPropertyTypes(),
+            'locations'          => $this->getLocations(),
         ];
     }
 
@@ -81,6 +82,21 @@ class FrontPage extends Composer
         if (is_wp_error($terms)) {
             return [];
         }
+        return array_map(fn($t) => [
+            'name'  => $t->name,
+            'slug'  => $t->slug,
+            'count' => $t->count,
+            'link'  => get_term_link($t),
+        ], $terms);
+    }
+
+    private function getLocations(): array
+    {
+        $terms = get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]);
+        if (is_wp_error($terms)) {
+            return [];
+        }
+        // Use taxonomy term URL for SEO: /location/san-salvador/ instead of ?location=san-salvador
         return array_map(fn($t) => [
             'name'  => $t->name,
             'slug'  => $t->slug,

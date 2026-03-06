@@ -27,6 +27,12 @@
   </div>
 </div>
 
+<div class="sv-container pt-8 pb-0">
+  <h1 class="font-display text-2xl sm:text-3xl font-bold text-sv-navy leading-tight">
+    {{ $p['title'] }}
+  </h1>
+</div>
+
 <div class="sv-container py-10">
   <div class="sv-single-layout">
 
@@ -115,7 +121,7 @@
         <h2 style="font-family:var(--font-display);font-size:1.25rem;color:var(--color-sv-navy);margin-bottom:1rem;">
           {{ __('Property description', 'sage') }}
         </h2>
-        <div style="color:var(--color-sv-stone);line-height:1.75;font-size:0.95rem;">
+        <div class="sv-prose">
           {!! wp_kses_post(get_the_content(null, false, $p['id'])) !!}
         </div>
       </div>

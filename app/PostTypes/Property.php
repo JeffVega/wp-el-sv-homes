@@ -65,17 +65,19 @@ class Property
             'rewrite'           => ['slug' => 'property-status'],
         ]);
 
-        // Location / Department
+        // Location / Department — public for admin UI and filtering, but
+        // archive URLs are disabled to avoid competing with the Location CPT pages.
         register_taxonomy('property_location', 'property', [
             'labels' => [
                 'name'          => __('Locations', 'sage'),
                 'singular_name' => __('Location', 'sage'),
                 'add_new_item'  => __('Add New Location', 'sage'),
             ],
-            'hierarchical'      => true,
-            'public'            => true,
-            'show_in_rest'      => true,
-            'rewrite'           => ['slug' => 'location'],
+            'hierarchical'       => true,
+            'public'             => true,
+            'publicly_queryable' => false,
+            'show_in_rest'       => true,
+            'rewrite'            => false,
         ]);
     }
 

@@ -43,16 +43,15 @@
         </ul>
       </div>
 
-      {{-- Locations --}}
+      {{-- Locations (SEO: taxonomy term URLs e.g. /location/san-salvador/) --}}
       <div>
         <div class="sv-footer__col-title">{{ __('Departments', 'sage') }}</div>
         <ul class="sv-footer__links">
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=san-salvador">San Salvador</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=la-libertad">La Libertad</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=santa-ana">Santa Ana</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=sonsonate">Sonsonate</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=san-miguel">San Miguel</a></li>
-          <li><a href="{{ get_post_type_archive_link('property') }}?location=la-paz">La Paz</a></li>
+          @foreach(get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]) as $loc)
+            @if(!is_wp_error($loc))
+              <li><a href="{{ get_term_link($loc) }}">{{ $loc->name }}</a></li>
+            @endif
+          @endforeach
         </ul>
       </div>
 

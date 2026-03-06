@@ -6,7 +6,12 @@ use Roots\Acorn\View\Composer;
 
 class PropertyArchive extends Composer
 {
-    protected static $views = ['archive-property'];
+    protected static $views = [
+        'archive-property',
+        'taxonomy-property_location',
+        'taxonomy-property_type',
+        'taxonomy-property_status',
+    ];
 
     public function with(): array
     {
@@ -17,8 +22,54 @@ class PropertyArchive extends Composer
             'locations'      => $this->getTerms('property_location'),
             'currentFilters' => $this->getCurrentFilters(),
             'totalFound'     => $this->getTotalFound(),
+            'archiveTitle'   => $this->getArchiveTitle(),
+            'termDescription' => $this->getTermDescription(),
+            'formAction'      => $this->getFormAction(),
             'whatsappGlobal' => get_option('sv_whatsapp_global', ''),
         ];
+    }
+
+    private function getArchiveTitle(): string
+    {
+        if (is_tax('property_location')) {
+            $term = get_queried_object();
+            return $term ? sprintf(__('Properties in %s', 'sage'), $term->name)
+                         : __('Properties in El Salvador', 'sage');
+        }
+        if (is_tax('property_type')) {
+            $term = get_queried_object();
+            return $term ? sprintf(__('%s Properties in El Salvador', 'sage'), $term->name)
+                         : __('Properties in El Salvador', 'sage');
+        }
+        if (is_tax('property_status')) {
+            $term = get_queried_object();
+            return $term ? sprintf(__('Properties %s in El Salvador', 'sage'), $term->name)
+                         : __('Properties in El Salvador', 'sage');
+        }
+        return __('Properties in El Salvador', 'sage');
+    }
+
+    private function getTermDescription(): string
+    {
+        if (is_tax(['property_location', 'property_type', 'property_status'])) {
+            $term = get_queried_object();
+            if ($term && !empty($term->description)) {
+                return wp_kses_post($term->description);
+            }
+        }
+        return '';
+    }
+
+    private function getFormAction(): string
+    {
+        if (is_tax(['property_location', 'property_type', 'property_status'])) {
+            $term = get_queried_object();
+            if ($term) {
+                $link = get_term_link($term);
+                if (!is_wp_error($link)) return $link;
+            }
+        }
+        return (string) get_post_type_archive_link('property');
     }
 
     private function getProperties(): array
@@ -45,7 +96,7 @@ class PropertyArchive extends Composer
 
     private function getCurrentFilters(): array
     {
-        return [
+        $filters = [
             'type'     => sanitize_text_field($_GET['property_type'] ?? ''),
             'status'   => sanitize_text_field($_GET['property_status'] ?? ''),
             'location' => sanitize_text_field($_GET['location'] ?? ''),
@@ -54,5 +105,25 @@ class PropertyArchive extends Composer
             'beds'     => sanitize_text_field($_GET['bedrooms'] ?? ''),
             'keyword'  => sanitize_text_field($_GET['keyword'] ?? ''),
         ];
+        // Pre-fill filters to reflect the current taxonomy page.
+        if (is_tax('property_location')) {
+            $term = get_queried_object();
+            if ($term && isset($term->slug)) {
+                $filters['location'] = $term->slug;
+            }
+        }
+        if (is_tax('property_type')) {
+            $term = get_queried_object();
+            if ($term && isset($term->slug)) {
+                $filters['type'] = $term->slug;
+            }
+        }
+        if (is_tax('property_status')) {
+            $term = get_queried_object();
+            if ($term && isset($term->slug)) {
+                $filters['status'] = $term->slug;
+            }
+        }
+        return $filters;
     }
 }
