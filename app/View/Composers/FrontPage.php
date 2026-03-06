@@ -17,10 +17,18 @@ class FrontPage extends Composer
             'propertyCounts'     => $this->getPropertyCounts(),
             'heroTitle'          => get_option('sv_hero_title', 'Your Home in El Salvador'),
             'heroSubtitle'       => get_option('sv_hero_subtitle', 'Discover the best properties in the land of progress'),
+            'heroImage'          => $this->getHeroImage(),
             'whatsappGlobal'     => get_option('sv_whatsapp_global', ''),
             'propertyTypes'      => $this->getPropertyTypes(),
             'locations'          => $this->getLocations(),
         ];
+    }
+
+    private function getHeroImage(): string
+    {
+        $url = get_option('sv_hero_image_url', '');
+
+        return $url ?: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80';
     }
 
     private function getFeaturedProperties(): array

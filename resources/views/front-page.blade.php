@@ -6,7 +6,15 @@
      HERO SECTION
 ═══════════════════════════════════════════════════════════ --}}
 <section class="sv-hero" aria-label="{{ __('Home', 'sage') }}">
-  {{-- Background image placeholder (blue gradient = El Salvador sky) --}}
+  {{-- Hero background photo --}}
+  @if(!empty($heroImage))
+    <img
+      src="{{ $heroImage }}"
+      alt="{{ __('Properties in El Salvador', 'sage') }}"
+      class="sv-hero__bg"
+      fetchpriority="high"
+    >
+  @endif
   <div class="sv-hero__overlay"></div>
   <div class="sv-hero__pattern"></div>
 

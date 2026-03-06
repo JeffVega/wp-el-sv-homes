@@ -252,51 +252,105 @@ add_action('manage_property_posts_custom_column', function (string $col, int $po
 }, 10, 2);
 
 /**
- * Add a global WhatsApp + Maps settings page under Settings menu.
+ * Register all SV Homes settings in the Customizer.
  */
-add_action('admin_menu', function () {
-    add_options_page(
-        __('SV Homes Settings', 'sage'),
-        __('SV Homes', 'sage'),
-        'manage_options',
-        'sv-homes-settings',
-        function () {
-            if (isset($_POST['sv_homes_nonce']) && wp_verify_nonce($_POST['sv_homes_nonce'], 'sv_homes_save')) {
-                update_option('sv_whatsapp_global', sanitize_text_field($_POST['sv_whatsapp_global'] ?? ''));
-                update_option('sv_google_maps_key', sanitize_text_field($_POST['sv_google_maps_key'] ?? ''));
-                update_option('sv_hero_title', sanitize_text_field($_POST['sv_hero_title'] ?? ''));
-                update_option('sv_hero_subtitle', sanitize_text_field($_POST['sv_hero_subtitle'] ?? ''));
-                update_option('sv_families_helped', intval($_POST['sv_families_helped'] ?? 500));
-                echo '<div class="notice notice-success"><p>' . esc_html__('Settings saved!', 'sage') . '</p></div>';
-            }
-            ?>
-            <div class="wrap">
-                <h1><?= esc_html__('El Salvador Homes — Settings', 'sage') ?></h1>
-                <form method="post">
-                    <?php wp_nonce_field('sv_homes_save', 'sv_homes_nonce'); ?>
-                    <table class="form-table">
-                        <tr><th><?= esc_html__('Global WhatsApp Number', 'sage') ?></th>
-                            <td><input type="text" name="sv_whatsapp_global" class="regular-text" value="<?= esc_attr(get_option('sv_whatsapp_global')) ?>" placeholder="+50370000000"></td>
-                        </tr>
-                        <tr><th><?= esc_html__('Google Maps API Key', 'sage') ?></th>
-                            <td><input type="text" name="sv_google_maps_key" class="regular-text" value="<?= esc_attr(get_option('sv_google_maps_key')) ?>"></td>
-                        </tr>
-                        <tr><th><?= esc_html__('Hero Headline', 'sage') ?></th>
-                            <td><input type="text" name="sv_hero_title" class="regular-text" value="<?= esc_attr(get_option('sv_hero_title', 'Tu Hogar en El Salvador')) ?>"></td>
-                        </tr>
-                        <tr><th><?= esc_html__('Hero Subheadline', 'sage') ?></th>
-                            <td><input type="text" name="sv_hero_subtitle" class="large-text" value="<?= esc_attr(get_option('sv_hero_subtitle', 'Descubre las mejores propiedades en el país del progreso')) ?>"></td>
-                        </tr>
-                        <tr><th><?= esc_html__('Families Helped (stat)', 'sage') ?></th>
-                            <td><input type="number" name="sv_families_helped" value="<?= esc_attr(get_option('sv_families_helped', 500)) ?>"></td>
-                        </tr>
-                    </table>
-                    <?php submit_button(__('Save Settings', 'sage')); ?>
-                </form>
-            </div>
-            <?php
-        }
-    );
+add_action('customize_register', function (\WP_Customize_Manager $wp_customize) {
+
+    $wp_customize->add_panel('sv_homes', [
+        'title'    => __('SV Homes', 'sage'),
+        'priority' => 30,
+    ]);
+
+    /* ── Hero Section ─────────────────────────────────────────── */
+
+    $wp_customize->add_section('sv_hero', [
+        'title' => __('Hero Section', 'sage'),
+        'panel' => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_hero_title', [
+        'type'              => 'option',
+        'default'           => 'Your Home in El Salvador',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_hero_title', [
+        'label'   => __('Headline', 'sage'),
+        'section' => 'sv_hero',
+        'type'    => 'text',
+    ]);
+
+    $wp_customize->add_setting('sv_hero_subtitle', [
+        'type'              => 'option',
+        'default'           => 'Discover the best properties in the country of progress',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_hero_subtitle', [
+        'label'   => __('Subheadline', 'sage'),
+        'section' => 'sv_hero',
+        'type'    => 'text',
+    ]);
+
+    $wp_customize->add_setting('sv_hero_image_url', [
+        'type'              => 'option',
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new \WP_Customize_Image_Control($wp_customize, 'sv_hero_image_url', [
+        'label'       => __('Background Image', 'sage'),
+        'description' => __('Upload or select a high-quality image (min 2000 px wide). Leave blank for the default.', 'sage'),
+        'section'     => 'sv_hero',
+    ]));
+
+    $wp_customize->add_setting('sv_families_helped', [
+        'type'              => 'option',
+        'default'           => 500,
+        'sanitize_callback' => 'absint',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_families_helped', [
+        'label'   => __('Families Helped (stat)', 'sage'),
+        'section' => 'sv_hero',
+        'type'    => 'number',
+    ]);
+
+    /* ── Contact / WhatsApp ───────────────────────────────────── */
+
+    $wp_customize->add_section('sv_contact', [
+        'title' => __('Contact & WhatsApp', 'sage'),
+        'panel' => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_whatsapp_global', [
+        'type'              => 'option',
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('sv_whatsapp_global', [
+        'label'       => __('Global WhatsApp Number', 'sage'),
+        'description' => __('Include country code, e.g. +50370000000', 'sage'),
+        'section'     => 'sv_contact',
+        'type'        => 'text',
+    ]);
+
+    /* ── API Keys ─────────────────────────────────────────────── */
+
+    $wp_customize->add_section('sv_api_keys', [
+        'title' => __('API Keys', 'sage'),
+        'panel' => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_google_maps_key', [
+        'type'              => 'option',
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('sv_google_maps_key', [
+        'label'   => __('Google Maps API Key', 'sage'),
+        'section' => 'sv_api_keys',
+        'type'    => 'text',
+    ]);
 });
 
 /**
