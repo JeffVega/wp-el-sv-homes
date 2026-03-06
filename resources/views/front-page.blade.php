@@ -20,7 +20,6 @@
 
   <div class="sv-container sv-hero__content">
     <div style="max-width:720px;">
-
       <div class="sv-hero__badge sv-fade-up">
         🇸🇻 {{ __('El Salvador — Land of Progress', 'sage') }}
       </div>
@@ -32,36 +31,34 @@
       <p class="sv-hero__subtitle sv-fade-up sv-fade-up--delay-2">
         {{ $heroSubtitle }}
       </p>
+    </div>
 
-      <div class="sv-fade-up sv-fade-up--delay-3">
-        @include('partials.property-search', [
-          'types'     => $propertyTypes ? collect($propertyTypes)->map(fn($t) => (object)$t)->toArray() : get_terms(['taxonomy' => 'property_type', 'hide_empty' => false]),
-          'statuses'  => get_terms(['taxonomy' => 'property_status', 'hide_empty' => false]),
-          'locations' => get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]),
-          'compact'   => false,
-        ])
+    <div class="sv-fade-up sv-fade-up--delay-3 mt-6">
+      @include('partials.property-search', [
+        'types'     => $propertyTypes ? collect($propertyTypes)->map(fn($t) => (object)$t)->toArray() : get_terms(['taxonomy' => 'property_type', 'hide_empty' => false]),
+        'statuses'  => get_terms(['taxonomy' => 'property_status', 'hide_empty' => false]),
+        'locations' => get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]),
+        'compact'   => false,
+      ])
+    </div>
+
+    <div class="sv-hero__stats sv-fade-up sv-fade-up--delay-3">
+      <div class="sv-hero__stat-item">
+        <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['total'] }}">{{ $propertyCounts['total'] }}</span>
+        <span class="sv-hero__stat-label">{{ __('Properties', 'sage') }}</span>
       </div>
-
-      {{-- Stats --}}
-      <div class="sv-hero__stats sv-fade-up sv-fade-up--delay-3">
-        <div class="sv-hero__stat-item">
-          <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['total'] }}">{{ $propertyCounts['total'] }}</span>
-          <span class="sv-hero__stat-label">{{ __('Properties', 'sage') }}</span>
-        </div>
-        <div class="sv-hero__stat-item">
-          <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['families'] }}">{{ $propertyCounts['families'] }}+</span>
-          <span class="sv-hero__stat-label">{{ __('Families helped', 'sage') }}</span>
-        </div>
-        <div class="sv-hero__stat-item">
-          <span class="sv-hero__stat-num">14</span>
-          <span class="sv-hero__stat-label">{{ __('Cities covered', 'sage') }}</span>
-        </div>
-        <div class="sv-hero__stat-item">
-          <span class="sv-hero__stat-num">10+</span>
-          <span class="sv-hero__stat-label">{{ __('Years of experience', 'sage') }}</span>
-        </div>
+      <div class="sv-hero__stat-item">
+        <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['families'] }}">{{ $propertyCounts['families'] }}+</span>
+        <span class="sv-hero__stat-label">{{ __('Families helped', 'sage') }}</span>
       </div>
-
+      <div class="sv-hero__stat-item">
+        <span class="sv-hero__stat-num">14</span>
+        <span class="sv-hero__stat-label">{{ __('Cities covered', 'sage') }}</span>
+      </div>
+      <div class="sv-hero__stat-item">
+        <span class="sv-hero__stat-num">10+</span>
+        <span class="sv-hero__stat-label">{{ __('Years of experience', 'sage') }}</span>
+      </div>
     </div>
   </div>
 
