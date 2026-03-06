@@ -59,7 +59,7 @@
         <span>🔍 {{ __('Filters', 'sage') }}</span>
         <div style="display:flex;align-items:center;gap:0.75rem;">
           @if(array_filter($currentFilters))
-            <a href="{{ get_post_type_archive_link('property') }}" style="color:rgba(255,255,255,0.7);font-size:0.78rem;text-decoration:none;">
+            <a href="{{ $formAction }}" style="color:rgba(255,255,255,0.7);font-size:0.78rem;text-decoration:none;">
               {{ __('Clear', 'sage') }}
             </a>
           @endif
@@ -89,6 +89,7 @@
           </select>
         </div>
 
+        @unless(isset($lockType) && $lockType)
         <div class="sv-filter-group">
           <label class="sv-filter-label" for="sf-type">{{ __('Type', 'sage') }}</label>
           <select id="sf-type" name="property_type" class="sv-filter-input">
@@ -100,7 +101,9 @@
             @endforeach
           </select>
         </div>
+        @endunless
 
+        @unless(isset($lockLocation) && $lockLocation)
         <div class="sv-filter-group">
           <label class="sv-filter-label" for="sf-location">{{ __('Department', 'sage') }}</label>
           <select id="sf-location" name="location" class="sv-filter-input">
@@ -112,6 +115,7 @@
             @endforeach
           </select>
         </div>
+        @endunless
 
         <div class="sv-filter-group">
           <label class="sv-filter-label">{{ __('Price range (USD)', 'sage') }}</label>

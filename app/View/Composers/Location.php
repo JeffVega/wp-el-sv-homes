@@ -10,24 +10,35 @@ class Location extends Composer
 
     public function with(): array
     {
-        $termSlug = get_post_meta(get_the_ID(), '_sv_location_term_slug', true) ?: '';
-        $filters  = $this->getCurrentFilters();
-        $query    = $this->buildPropertyQuery($termSlug, $filters);
+        $termSlug  = get_post_meta(get_the_ID(), '_sv_location_term_slug', true) ?: '';
+        $ptypeSlug = get_query_var('sv_ptype', '');
+        $filters   = $this->getCurrentFilters();
+        $query     = $this->buildPropertyQuery($termSlug, $ptypeSlug, $filters);
+
+        $activePropertyType = $ptypeSlug
+            ? get_term_by('slug', $ptypeSlug, 'property_type')
+            : null;
+
+        $formAction = (string) get_permalink();
+        if ($activePropertyType) {
+            $formAction = trailingslashit($formAction) . $activePropertyType->slug . '/';
+        }
 
         return [
-            'termSlug'       => $termSlug,
-            'properties'     => FrontPage::hydrateProperties($query->posts),
-            'totalFound'     => (int) $query->found_posts,
-            'maxPages'       => (int) $query->max_num_pages,
-            'propertyTypes'  => $this->getTerms('property_type'),
-            'propertyStatus' => $this->getTerms('property_status'),
-            'currentFilters' => $filters,
-            'formAction'     => (string) get_permalink(),
-            'whatsappGlobal' => get_option('sv_whatsapp_global', ''),
+            'termSlug'           => $termSlug,
+            'activePropertyType' => $activePropertyType ?: null,
+            'properties'         => FrontPage::hydrateProperties($query->posts),
+            'totalFound'         => (int) $query->found_posts,
+            'maxPages'           => (int) $query->max_num_pages,
+            'propertyTypes'      => $this->getTerms('property_type'),
+            'propertyStatus'     => $this->getTerms('property_status'),
+            'currentFilters'     => $filters,
+            'formAction'         => $formAction,
+            'whatsappGlobal'     => get_option('sv_whatsapp_global', ''),
         ];
     }
 
-    private function buildPropertyQuery(string $termSlug, array $filters): \WP_Query
+    private function buildPropertyQuery(string $termSlug, string $ptypeSlug, array $filters): \WP_Query
     {
         if (! $termSlug) {
             return new \WP_Query(['post_type' => 'property', 'posts_per_page' => 0]);
@@ -44,6 +55,11 @@ class Location extends Composer
                 ['taxonomy' => 'property_location', 'field' => 'slug', 'terms' => $termSlug],
             ],
         ];
+
+        if ($ptypeSlug) {
+            $args['tax_query'][]         = ['taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $ptypeSlug];
+            $args['tax_query']['relation'] = 'AND';
+        }
 
         // Orderby
         $orderby = sanitize_key($_GET['orderby'] ?? '');
@@ -69,8 +85,8 @@ class Location extends Composer
             $args['meta_query']    = $metaQuery;
         }
 
-        // Taxonomy filters (on top of the locked location term)
-        if ($filters['type']) {
+        // Additional taxonomy filters from query params
+        if (! $ptypeSlug && $filters['type']) {
             $args['tax_query'][]         = ['taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $filters['type']];
             $args['tax_query']['relation'] = 'AND';
         }

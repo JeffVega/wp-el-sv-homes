@@ -22,7 +22,7 @@ class Location
             ],
             'public'          => true,
             'has_archive'     => false,
-            'rewrite'         => ['slug' => 'locations', 'with_front' => false],
+            'rewrite'         => false,
             'supports'        => ['title', 'editor', 'thumbnail', 'excerpt'],
             'menu_icon'       => 'dashicons-location',
             'menu_position'   => 6,

@@ -4,7 +4,7 @@
 --}}
 @php
   $compact    = $compact ?? false;
-  $archiveUrl = get_post_type_archive_link('property') ?: home_url('/properties');
+  $archiveUrl = get_post_type_archive_link('property') ?: home_url('/property-search');
 @endphp
 
 @if($compact)

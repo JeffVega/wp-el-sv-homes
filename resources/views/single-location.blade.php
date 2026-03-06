@@ -31,13 +31,25 @@
       <span>›</span>
       <a href="{{ get_post_type_archive_link('property') }}">{{ __('Properties', 'sage') }}</a>
       <span>›</span>
-      {{ $cityName }}
+      @if($activePropertyType)
+        <a href="{{ get_permalink() }}">{{ $cityName }}</a>
+        <span>›</span>
+        {{ $activePropertyType->name }}
+      @else
+        {{ $cityName }}
+      @endif
     </nav>
 
     {{-- Editorial title block --}}
     <div class="sv-loc-hero__body">
-      <div class="sv-loc-hero__label">{{ __('Location Guide', 'sage') }}</div>
-      <h1 class="sv-loc-hero__name">{{ $cityName }}</h1>
+      <div class="sv-loc-hero__label">{{ $activePropertyType ? $activePropertyType->name : __('Location Guide', 'sage') }}</div>
+      <h1 class="sv-loc-hero__name">
+        @if($activePropertyType)
+          {{ sprintf(__('%s in %s', 'sage'), $activePropertyType->name, $cityName) }}
+        @else
+          {{ $cityName }}
+        @endif
+      </h1>
 
       <div class="sv-loc-hero__foot">
         <div class="sv-loc-hero__stats">
@@ -78,6 +90,26 @@
   </section>
 @endif
 
+{{-- ── PROPERTY TYPE NAV ────────────────────────────────────── --}}
+@if(!empty($propertyTypes))
+  <nav class="sv-container py-4" aria-label="{{ __('Property types', 'sage') }}">
+    <div class="flex flex-wrap gap-2 items-center">
+      <a href="{{ get_permalink() }}"
+         class="inline-block px-4 py-1.5 rounded-full text-sm font-semibold transition
+                {{ !$activePropertyType ? 'bg-sv-navy text-white' : 'bg-gray-100 text-sv-navy hover:bg-gray-200' }}">
+        {{ __('All', 'sage') }}
+      </a>
+      @foreach($propertyTypes as $ptype)
+        <a href="{{ trailingslashit(get_permalink()) . $ptype->slug . '/' }}"
+           class="inline-block px-4 py-1.5 rounded-full text-sm font-semibold transition
+                  {{ $activePropertyType && $activePropertyType->slug === $ptype->slug ? 'bg-sv-navy text-white' : 'bg-gray-100 text-sv-navy hover:bg-gray-200' }}">
+          {{ $ptype->name }}
+        </a>
+      @endforeach
+    </div>
+  </nav>
+@endif
+
 {{-- ── PROPERTIES ──────────────────────────────────────────── --}}
 <section class="sv-loc-properties">
   <div class="sv-container">
@@ -86,7 +118,11 @@
     <div class="sv-loc-properties__head">
       <div>
         <h2 class="sv-loc-properties__title">
-          {{ sprintf(__('Properties in %s', 'sage'), $cityName) }}
+          @if($activePropertyType)
+            {{ sprintf(__('%s in %s', 'sage'), $activePropertyType->name, $cityName) }}
+          @else
+            {{ sprintf(__('Properties in %s', 'sage'), $cityName) }}
+          @endif
         </h2>
         <p class="sv-loc-properties__sub">
           @if($totalFound > 0)
@@ -134,6 +170,7 @@
           </select>
         </div>
 
+        @unless($activePropertyType)
         <div class="sv-loc-filter__group sv-loc-filter__group--md">
           <label class="sv-loc-filter__lbl" for="lf-type">{{ __('Type', 'sage') }}</label>
           <select class="sv-loc-filter__select" id="lf-type" name="property_type">
@@ -145,6 +182,7 @@
             @endforeach
           </select>
         </div>
+        @endunless
 
         <div class="sv-loc-filter__group">
           <label class="sv-loc-filter__lbl">{{ __('Price (USD)', 'sage') }}</label>
