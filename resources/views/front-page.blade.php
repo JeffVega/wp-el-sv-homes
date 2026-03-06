@@ -46,7 +46,7 @@
         </div>
         <div class="sv-hero__stat-item">
           <span class="sv-hero__stat-num">14</span>
-          <span class="sv-hero__stat-label">{{ __('Departments', 'sage') }}</span>
+          <span class="sv-hero__stat-label">{{ __('Cities covered', 'sage') }}</span>
         </div>
         <div class="sv-hero__stat-item">
           <span class="sv-hero__stat-num">10+</span>
