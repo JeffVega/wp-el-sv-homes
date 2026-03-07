@@ -32,21 +32,77 @@ import.meta.glob([
 
 // ─── Mobile nav toggle ───────────────────────────────────────
 (function initMobileNav() {
-  const toggle  = document.getElementById('sv-mobile-toggle');
-  const wrapper = document.getElementById('sv-nav-wrapper');
+  const toggle   = document.getElementById('sv-mobile-toggle');
+  const wrapper  = document.getElementById('sv-nav-wrapper');
+  const backdrop = document.getElementById('sv-nav-backdrop');
   if (!toggle || !wrapper) return;
 
-  toggle.addEventListener('click', () => {
-    const isOpen = wrapper.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(isOpen));
+  const closeMenu = () => {
+    wrapper.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    if (backdrop) {
+      backdrop.classList.remove('is-visible');
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+  };
+
+  const openMenu = () => {
+    wrapper.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    if (backdrop) {
+      backdrop.classList.add('is-visible');
+      backdrop.setAttribute('aria-hidden', 'false');
+    }
+  };
+
+  toggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (wrapper.classList.contains('open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
-  // Close on outside click
+  // Backdrop tap closes menu (reliable on mobile)
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMenu);
+    backdrop.addEventListener('touchend', closeMenu, { passive: true });
+  }
+
+  // Close when clicking a nav link (before navigation)
+  wrapper.querySelectorAll('.sv-nav a, .sv-nav__wa-cta').forEach(link => {
+    link.addEventListener('click', () => closeMenu());
+  });
+
+  // Close on outside click (use capture so it runs before other handlers)
   document.addEventListener('click', (e) => {
-    if (!toggle.contains(e.target) && !wrapper.contains(e.target)) {
-      wrapper.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
+    if (wrapper.classList.contains('open') && !toggle.contains(e.target) && !wrapper.contains(e.target) && e.target !== backdrop) {
+      closeMenu();
     }
+  }, true);
+
+  // Close on touch outside (mobile: touchend can fire without click in some cases)
+  document.addEventListener('touchend', (e) => {
+    if (wrapper.classList.contains('open') && !toggle.contains(e.target) && !wrapper.contains(e.target) && e.target !== backdrop) {
+      closeMenu();
+    }
+  }, { passive: true });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wrapper.classList.contains('open')) {
+      closeMenu();
+    }
+  });
+
+  // Close when resizing to desktop (nav is visible by default above 900px)
+  const mq = window.matchMedia('(min-width: 901px)');
+  mq.addEventListener('change', (e) => {
+    if (e.matches) closeMenu();
   });
 })();
 

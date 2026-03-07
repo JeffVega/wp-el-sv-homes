@@ -118,13 +118,7 @@
     {{-- Editorial title block --}}
     <div class="sv-loc-hero__body">
       <div class="sv-loc-hero__label">{{ $activePropertyType ? $activePropertyType->name : __('Location Guide', 'sage') }}</div>
-      <h1 class="sv-loc-hero__name">
-        @if($activePropertyType)
-          {{ sprintf(__('%s in %s', 'sage'), $activePropertyType->name, $cityName) }}
-        @else
-          {{ $cityName }}
-        @endif
-      </h1>
+      <h1 class="sv-loc-hero__name">{{ sprintf(__('Buying Homes in %s', 'sage'), $cityName) }}</h1>
 
       <div class="sv-loc-hero__foot">
         <div class="sv-loc-hero__stats">

@@ -28,13 +28,16 @@
     </a>
 
     {{-- Mobile toggle --}}
-    <button class="sv-mobile-toggle" id="sv-mobile-toggle" aria-label="{{ __('Toggle navigation', 'sage') }}" aria-expanded="false">
+    <button type="button" class="sv-mobile-toggle" id="sv-mobile-toggle" aria-label="{{ __('Toggle navigation', 'sage') }}" aria-expanded="false">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <line x1="3" y1="6" x2="21" y2="6" class="sv-nav-line sv-nav-line-1"/>
         <line x1="3" y1="12" x2="21" y2="12" class="sv-nav-line sv-nav-line-2"/>
         <line x1="3" y1="18" x2="21" y2="18" class="sv-nav-line sv-nav-line-3"/>
       </svg>
     </button>
+
+    {{-- Mobile nav backdrop (tap to close) --}}
+    <div class="sv-nav-backdrop" id="sv-nav-backdrop" aria-hidden="true"></div>
 
     {{-- Navigation --}}
     <div class="sv-nav-wrapper" id="sv-nav-wrapper">
@@ -67,6 +70,8 @@
         </a>
       @endif
 
+      {{-- El Salvador flag strip (blue-white-blue) at bottom of mobile nav --}}
+      <span class="sv-nav-wrapper__flag" aria-hidden="true"><span></span><span></span><span></span></span>
     </div>
 
   </div>
