@@ -60,7 +60,7 @@ add_action('admin_post_sv_property_inquiry', function () {
 
     $to      = get_option('admin_email');
     $subject = sprintf(__('New Inquiry: %s', 'sage'), $propTitle);
-    $body    = "Property: {$propTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}";
+    $body    = "Property: {$propTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}\n\n---\nSource: {$redirect}";
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
 
     if ($email) {
@@ -115,7 +115,7 @@ add_action('admin_post_sv_contact_form', function () {
     $safeName = str_replace(['<', '>', '"'], '', $name);
     $to       = get_option('admin_email');
     $subLine  = sprintf(__('Contact from: %s %s', 'sage'), $name, $last);
-    $body     = "Name: {$name} {$last}\nEmail: {$email}\nPhone: {$phone}\nSubject: {$subject}\n\nMessage:\n{$message}";
+    $body     = "Name: {$name} {$last}\nEmail: {$email}\nPhone: {$phone}\nSubject: {$subject}\n\nMessage:\n{$message}\n\n---\nSource: {$redirect}";
     $headers  = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: {$safeName} <{$email}>"];
 
     wp_mail($to, $subLine, $body, $headers);
@@ -160,7 +160,7 @@ add_action('admin_post_sv_location_lead', function () {
     $locationTitle = get_the_title($locationId) ?: __('Unknown location', 'sage');
     $to      = get_option('admin_email');
     $subject = sprintf(__('New Lead: %s', 'sage'), $locationTitle);
-    $body    = "Location: {$locationTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}";
+    $body    = "Location: {$locationTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}\n\n---\nSource: {$redirect}";
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
 
     if ($email) {
