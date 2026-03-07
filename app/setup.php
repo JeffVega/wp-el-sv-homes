@@ -89,6 +89,9 @@ add_action('after_setup_theme', function () {
      */
     register_nav_menus([
         'primary_navigation' => __('Primary Navigation', 'sage'),
+        'footer_properties'  => __('Footer: Properties', 'sage'),
+        'footer_cities'      => __('Footer: Cities', 'sage'),
+        'footer_company'     => __('Footer: Company', 'sage'),
     ]);
 
     /**
@@ -419,6 +422,43 @@ add_action('customize_register', function (\WP_Customize_Manager $wp_customize) 
         'description' => __('Check the locations you want in the grid. Order is preserved.', 'sage'),
         'section'     => 'sv_home_locations',
     ]));
+
+    /* ── Footer ───────────────────────────────────────────────── */
+
+    $wp_customize->add_section('sv_footer', [
+        'title' => __('Footer', 'sage'),
+        'panel' => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_footer_tagline', [
+        'type'              => 'option',
+        'default'           => 'Your trusted real estate partner in El Salvador. Connecting families with their dream home.',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ]);
+    $wp_customize->add_control('sv_footer_tagline', [
+        'label'   => __('Footer Tagline', 'sage'),
+        'section' => 'sv_footer',
+        'type'    => 'textarea',
+    ]);
+
+    foreach ([
+        'sv_social_facebook'  => __('Facebook URL', 'sage'),
+        'sv_social_instagram' => __('Instagram URL', 'sage'),
+        'sv_social_whatsapp'  => __('WhatsApp URL (e.g. https://wa.me/50370000000)', 'sage'),
+        'sv_social_youtube'   => __('YouTube URL', 'sage'),
+    ] as $setting => $label) {
+        $wp_customize->add_setting($setting, [
+            'type'              => 'option',
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+        ]);
+        $wp_customize->add_control($setting, [
+            'label'   => $label,
+            'section' => 'sv_footer',
+            'type'    => 'url',
+        ]);
+    }
 
     /* ── Contact / WhatsApp ───────────────────────────────────── */
 

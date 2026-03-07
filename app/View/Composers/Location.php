@@ -10,25 +10,44 @@ class Location extends Composer
 
     public function with(): array
     {
-        $termSlug = get_post_meta(get_the_ID(), '_sv_location_term_slug', true) ?: '';
-        $filters  = $this->getCurrentFilters();
-        $query    = $this->buildPropertyQuery($termSlug, $filters);
+        $postId       = get_the_ID();
+        $termSlug     = get_post_meta($postId, '_sv_location_term_slug', true) ?: '';
+        $showPropsRaw = get_post_meta($postId, '_sv_show_properties', true);
+        $showProperties = $showPropsRaw === '1'; // default off
 
-        $activePropertyType = $filters['type']
-            ? get_term_by('slug', $filters['type'], 'property_type')
-            : null;
+        $filters = $this->getCurrentFilters();
+
+        if ($showProperties) {
+            $query              = $this->buildPropertyQuery($termSlug, $filters);
+            $activePropertyType = $filters['type'] ? get_term_by('slug', $filters['type'], 'property_type') : null;
+            $properties         = FrontPage::hydrateProperties($query->posts);
+            $totalFound         = (int) $query->found_posts;
+            $maxPages           = (int) $query->max_num_pages;
+            $propertyTypes      = $this->getTerms('property_type');
+            $propertyStatus     = $this->getTerms('property_status');
+        } else {
+            $activePropertyType = null;
+            $properties         = [];
+            $totalFound         = 0;
+            $maxPages           = 0;
+            $propertyTypes      = [];
+            $propertyStatus     = [];
+        }
 
         return [
+            'showProperties'     => $showProperties,
             'termSlug'           => $termSlug,
             'activePropertyType' => $activePropertyType ?: null,
-            'properties'         => FrontPage::hydrateProperties($query->posts),
-            'totalFound'         => (int) $query->found_posts,
-            'maxPages'           => (int) $query->max_num_pages,
-            'propertyTypes'      => $this->getTerms('property_type'),
-            'propertyStatus'     => $this->getTerms('property_status'),
+            'properties'         => $properties,
+            'totalFound'         => $totalFound,
+            'maxPages'           => $maxPages,
+            'propertyTypes'      => $propertyTypes,
+            'propertyStatus'     => $propertyStatus,
             'currentFilters'     => $filters,
             'formAction'         => (string) get_permalink(),
             'whatsappGlobal'     => get_option('sv_whatsapp_global', ''),
+            'mapAddress'         => get_post_meta($postId, '_sv_map_address', true) ?: '',
+            'googleMapsKey'      => get_option('sv_google_maps_key', ''),
         ];
     }
 

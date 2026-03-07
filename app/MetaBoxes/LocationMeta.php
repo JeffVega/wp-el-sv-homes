@@ -24,8 +24,10 @@ class LocationMeta
 
     public static function renderSettingsBox(\WP_Post $post): void
     {
-        $termSlug = get_post_meta($post->ID, '_sv_location_term_slug', true);
-        $terms    = get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]);
+        $termSlug      = get_post_meta($post->ID, '_sv_location_term_slug', true);
+        $showProps     = get_post_meta($post->ID, '_sv_show_properties', true);
+        $showProps     = $showProps === '1'; // default off
+        $terms         = get_terms(['taxonomy' => 'property_location', 'hide_empty' => false]);
 
         wp_nonce_field('sv_location_save', 'sv_location_nonce');
         ?>
@@ -45,6 +47,27 @@ class LocationMeta
         <p style="margin-top:8px;font-size:11px;color:#666;">
             <?= esc_html__('Properties tagged with this location term will appear in the grid below the editorial content.', 'sage') ?>
         </p>
+        <hr style="margin:12px 0;">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" name="sv_show_properties" value="1" <?= checked($showProps, true, false) ?>>
+            <strong><?= esc_html__('Show properties grid', 'sage') ?></strong>
+        </label>
+        <p style="margin-top:6px;font-size:11px;color:#666;">
+            <?= esc_html__('Uncheck to hide the property grid and skip the query on this page.', 'sage') ?>
+        </p>
+        <hr style="margin:12px 0;">
+        <?php $mapAddress = get_post_meta($post->ID, '_sv_map_address', true); ?>
+        <p style="margin-bottom:6px;">
+            <label for="sv_map_address">
+                <strong><?= esc_html__('Google Maps Address', 'sage') ?></strong>
+            </label>
+        </p>
+        <input type="text" name="sv_map_address" id="sv_map_address"
+               value="<?= esc_attr($mapAddress) ?>" style="width:100%;"
+               placeholder="<?= esc_attr__('e.g. San Salvador, El Salvador', 'sage') ?>">
+        <p style="margin-top:6px;font-size:11px;color:#666;">
+            <?= esc_html__('Used for the Google Maps embed at the bottom of the page. Requires Google Maps API key in Customizer.', 'sage') ?>
+        </p>
         <?php
     }
 
@@ -60,5 +83,7 @@ class LocationMeta
         }
 
         update_post_meta($postId, '_sv_location_term_slug', sanitize_key($_POST['sv_location_term_slug'] ?? ''));
+        update_post_meta($postId, '_sv_show_properties', isset($_POST['sv_show_properties']) ? '1' : '0');
+        update_post_meta($postId, '_sv_map_address', sanitize_text_field($_POST['sv_map_address'] ?? ''));
     }
 }

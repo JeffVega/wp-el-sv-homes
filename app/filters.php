@@ -129,6 +129,56 @@ add_action('admin_post_nopriv_sv_contact_form', function () {
 });
 
 /**
+ * Handle location lead capture form submission.
+ */
+add_action('admin_post_sv_location_lead', function () {
+    $locationId = intval($_POST['location_id'] ?? 0);
+
+    if (
+        ! isset($_POST['sv_lead_nonce']) ||
+        ! wp_verify_nonce($_POST['sv_lead_nonce'], 'sv_location_lead_' . $locationId)
+    ) {
+        wp_die(__('Security check failed.', 'sage'));
+    }
+
+    if (! empty($_POST['sv_hp_field'])) {
+        wp_safe_redirect(home_url('/'));
+        exit;
+    }
+
+    $name     = sanitize_text_field($_POST['lead_name'] ?? '');
+    $phone    = sanitize_text_field($_POST['lead_phone'] ?? '');
+    $email    = sanitize_email($_POST['lead_email'] ?? '');
+    $message  = sanitize_textarea_field($_POST['lead_message'] ?? '');
+    $redirect = esc_url_raw($_POST['redirect_to'] ?? home_url('/'));
+
+    if (empty($name) || empty($phone)) {
+        wp_safe_redirect(add_query_arg('lead_sent', 'error', $redirect . '#sv-loc-lead'));
+        exit;
+    }
+
+    $locationTitle = get_the_title($locationId) ?: __('Unknown location', 'sage');
+    $to      = get_option('admin_email');
+    $subject = sprintf(__('New Lead: %s', 'sage'), $locationTitle);
+    $body    = "Location: {$locationTitle}\nName: {$name}\nPhone: {$phone}\nEmail: {$email}\n\nMessage:\n{$message}";
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+    if ($email) {
+        $safeName  = str_replace(['<', '>', '"'], '', $name);
+        $headers[] = "Reply-To: {$safeName} <{$email}>";
+    }
+
+    wp_mail($to, $subject, $body, $headers);
+
+    wp_safe_redirect(add_query_arg('lead_sent', '1', $redirect . '#sv-loc-lead'));
+    exit;
+});
+
+add_action('admin_post_nopriv_sv_location_lead', function () {
+    do_action('admin_post_sv_location_lead');
+});
+
+/**
  * Noindex filtered archive/taxonomy pages to prevent cannibalization.
  */
 add_filter('wp_robots', function (array $robots): array {

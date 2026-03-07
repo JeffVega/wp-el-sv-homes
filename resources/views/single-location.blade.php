@@ -120,6 +120,15 @@
       <div class="sv-loc-hero__label">{{ $activePropertyType ? $activePropertyType->name : __('Location Guide', 'sage') }}</div>
       <h1 class="sv-loc-hero__name">{{ sprintf(__('Buying Homes in %s', 'sage'), $cityName) }}</h1>
 
+      <div class="sv-loc-hero__cta">
+        @if($showProperties)
+          <a href="#sv-loc-properties" class="sv-btn sv-btn-primary">
+            {{ sprintf(__('Browse Homes in %s', 'sage'), $cityName) }}
+          </a>
+        @endif
+        <a href="#sv-loc-lead" class="sv-btn sv-btn-gold">{{ __('Talk to an Expert', 'sage') }}</a>
+      </div>
+
       <div class="sv-loc-hero__foot">
         <div class="sv-loc-hero__stats">
           <div>
@@ -160,7 +169,8 @@
 @endif
 
 {{-- ── PROPERTIES ──────────────────────────────────────────── --}}
-<section class="sv-loc-properties">
+@if($showProperties)
+<section class="sv-loc-properties" id="sv-loc-properties">
   <div class="sv-container">
 
     {{-- Section header --}}
@@ -332,6 +342,96 @@
   });
 })();
 </script>
+
+@endif {{-- showProperties --}}
+
+{{-- ── LEAD CAPTURE FORM ────────────────────────────────────── --}}
+<section class="sv-loc-lead" id="sv-loc-lead">
+  <div class="sv-container">
+    <div class="sv-loc-lead__inner">
+
+      <div>
+        <div class="sv-loc-lead__eyebrow">{{ __('Get in touch', 'sage') }}</div>
+        <h2 class="sv-loc-lead__title">
+          {{ sprintf(__('Interested in %s?', 'sage'), $cityName) }}
+        </h2>
+        <p class="sv-loc-lead__sub">
+          {{ __("Tell us what you're looking for and we'll help you find the right property.", 'sage') }}
+        </p>
+      </div>
+
+      <div class="sv-loc-lead__form">
+
+        @if(isset($_GET['lead_sent']))
+          @if($_GET['lead_sent'] === '1')
+            <div class="sv-loc-lead__notice sv-loc-lead__notice--success">
+              {{ __('Thanks! We will be in touch shortly.', 'sage') }}
+            </div>
+          @else
+            <div class="sv-loc-lead__notice sv-loc-lead__notice--error">
+              {{ __('Please fill in your name and phone number.', 'sage') }}
+            </div>
+          @endif
+        @endif
+
+        @php
+          $leadNonce = wp_create_nonce('sv_location_lead_' . $locId);
+        @endphp
+
+        <form method="POST" action="{{ esc_url(admin_url('admin-post.php')) }}">
+          <input type="hidden" name="action"      value="sv_location_lead">
+          <input type="hidden" name="location_id" value="{{ $locId }}">
+          <input type="hidden" name="redirect_to" value="{{ esc_url(get_permalink()) }}">
+          <input type="hidden" name="sv_lead_nonce" value="{{ $leadNonce }}">
+          <input type="text"   name="sv_hp_field" style="display:none;" tabindex="-1" autocomplete="off">
+
+          <div class="sv-loc-lead__row">
+            <div class="sv-loc-lead__field">
+              <label class="sv-loc-lead__label" for="lead-name">{{ __('Name *', 'sage') }}</label>
+              <input class="sv-loc-lead__input" type="text" id="lead-name" name="lead_name"
+                     required placeholder="{{ __('Your name', 'sage') }}">
+            </div>
+            <div class="sv-loc-lead__field">
+              <label class="sv-loc-lead__label" for="lead-phone">{{ __('Phone *', 'sage') }}</label>
+              <input class="sv-loc-lead__input" type="tel" id="lead-phone" name="lead_phone"
+                     required placeholder="{{ __('+503 7000 0000', 'sage') }}">
+            </div>
+          </div>
+
+          <div class="sv-loc-lead__field">
+            <label class="sv-loc-lead__label" for="lead-email">{{ __('Email', 'sage') }}</label>
+            <input class="sv-loc-lead__input" type="email" id="lead-email" name="lead_email"
+                   placeholder="{{ __('your@email.com', 'sage') }}">
+          </div>
+
+          <div class="sv-loc-lead__field">
+            <label class="sv-loc-lead__label" for="lead-message">{{ __('Message', 'sage') }}</label>
+            <textarea class="sv-loc-lead__textarea" id="lead-message" name="lead_message"
+                      placeholder="{{ __('What are you looking for?', 'sage') }}"></textarea>
+          </div>
+
+          <button type="submit" class="sv-btn sv-btn-primary" style="width:100%;justify-content:center;">
+            {{ __('Send Message', 'sage') }}
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{{-- ── GOOGLE MAPS ───────────────────────────────────────────── --}}
+@if($mapAddress && $googleMapsKey)
+  <div class="sv-loc-map">
+    <iframe
+      src="https://www.google.com/maps/embed/v1/place?key={{ esc_attr($googleMapsKey) }}&q={{ urlencode($mapAddress) }}"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="{{ sprintf(__('%s map', 'sage'), $cityName) }}"
+    ></iframe>
+  </div>
+@endif
 
 @endif
 
