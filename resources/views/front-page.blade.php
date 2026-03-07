@@ -44,10 +44,6 @@
 
     <div class="sv-hero__stats sv-fade-up sv-fade-up--delay-3">
       <div class="sv-hero__stat-item">
-        <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['total'] }}">{{ $propertyCounts['total'] }}</span>
-        <span class="sv-hero__stat-label">{{ __('Properties', 'sage') }}</span>
-      </div>
-      <div class="sv-hero__stat-item">
         <span class="sv-hero__stat-num" data-count="{{ $propertyCounts['families'] }}">{{ $propertyCounts['families'] }}+</span>
         <span class="sv-hero__stat-label">{{ __('Families helped', 'sage') }}</span>
       </div>
@@ -109,7 +105,6 @@
           <a href="{{ $type['link'] }}" class="sv-type-card">
             <div class="sv-type-card__icon">{{ $icon }}</div>
             <div class="sv-type-card__name">{{ $type['name'] }}</div>
-            <div class="sv-type-card__count">{{ $type['count'] }} {{ __('properties', 'sage') }}</div>
           </a>
         @endforeach
       @else
@@ -129,7 +124,6 @@
           <a href="{{ $archiveLink }}" class="sv-type-card">
             <div class="sv-type-card__icon">{{ $ft['icon'] }}</div>
             <div class="sv-type-card__name">{{ $ft['name'] }}</div>
-            <div class="sv-type-card__count">{{ __('View properties', 'sage') }}</div>
           </a>
         @endforeach
       @endif
@@ -155,7 +149,6 @@
         <a href="{{ $loc['link'] }}" class="sv-type-card">
           <div class="sv-type-card__icon">📍</div>
           <div class="sv-type-card__name">{{ $loc['name'] }}</div>
-          <div class="sv-type-card__count">{{ $loc['count'] }} {{ __('properties', 'sage') }}</div>
         </a>
       @endforeach
     </div>

@@ -100,13 +100,24 @@ class FrontPage extends Composer
 
     private function getLocations(): array
     {
-        $cptPosts = get_posts([
+        $chosenIds = get_option('sv_home_location_ids', '');
+        $idList   = $chosenIds !== '' ? array_filter(array_map('absint', explode(',', $chosenIds))) : [];
+
+        $args = [
             'post_type'      => 'location',
             'posts_per_page' => -1,
             'post_status'    => 'publish',
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-        ]);
+        ];
+
+        if (! empty($idList)) {
+            $args['post__in'] = $idList;
+            $args['orderby']  = 'post__in';
+        } else {
+            $args['orderby'] = 'title';
+            $args['order']    = 'ASC';
+        }
+
+        $cptPosts = get_posts($args);
 
         return array_map(function (\WP_Post $p) {
             $termSlug = get_post_meta($p->ID, '_sv_location_term_slug', true);

@@ -394,6 +394,32 @@ add_action('customize_register', function (\WP_Customize_Manager $wp_customize) 
         'type'    => 'number',
     ]);
 
+    /* ── Homepage: Explore by location ─────────────────────────── */
+
+    $wp_customize->add_section('sv_home_locations', [
+        'title'       => __('Homepage locations', 'sage'),
+        'description' => __('Choose which location pages appear in the "Explore by location" grid on the front page. Leave all unchecked to show every location.', 'sage'),
+        'panel'       => 'sv_homes',
+    ]);
+
+    $wp_customize->add_setting('sv_home_location_ids', [
+        'type'              => 'option',
+        'default'           => '',
+        'sanitize_callback' => function ($value) {
+            if (! is_string($value)) {
+                return '';
+            }
+            $ids = array_filter(array_map('absint', explode(',', $value)));
+            return implode(',', $ids);
+        },
+    ]);
+
+    $wp_customize->add_control(new \App\Customizer\LocationChecklistControl($wp_customize, 'sv_home_location_ids', [
+        'label'       => __('Location pages to show on homepage', 'sage'),
+        'description' => __('Check the locations you want in the grid. Order is preserved.', 'sage'),
+        'section'     => 'sv_home_locations',
+    ]));
+
     /* ── Contact / WhatsApp ───────────────────────────────────── */
 
     $wp_customize->add_section('sv_contact', [
