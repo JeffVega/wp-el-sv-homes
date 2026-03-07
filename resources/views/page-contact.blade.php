@@ -65,11 +65,11 @@
             <label class="sv-form-label">{{ __('How can we help you?', 'sage') }}</label>
             <select name="contact_subject" class="sv-form-control">
               <option value="">{{ __('Select an option', 'sage') }}</option>
-              <option value="comprar">{{ __('I want to buy a property', 'sage') }}</option>
-              <option value="alquilar">{{ __('I want to rent', 'sage') }}</option>
-              <option value="vender">{{ __('I want to sell/list my property', 'sage') }}</option>
-              <option value="invertir">{{ __('I want to invest in real estate', 'sage') }}</option>
-              <option value="otro">{{ __('Other', 'sage') }}</option>
+              <option value="buy">{{ __('I want to buy a property', 'sage') }}</option>
+              <option value="rent">{{ __('I want to rent', 'sage') }}</option>
+              <option value="sell">{{ __('I want to sell/list my property', 'sage') }}</option>
+              <option value="invest">{{ __('I want to invest in real estate', 'sage') }}</option>
+              <option value="other">{{ __('Other', 'sage') }}</option>
             </select>
           </div>
 

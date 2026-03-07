@@ -102,7 +102,7 @@ add_action('admin_post_sv_contact_form', function () {
     $message  = sanitize_textarea_field($_POST['contact_message'] ?? '');
     $redirect = esc_url_raw($_POST['redirect_to'] ?? home_url('/'));
 
-    $allowedSubjects = ['', 'comprar', 'alquilar', 'vender', 'invertir', 'otro'];
+    $allowedSubjects = ['', 'buy', 'rent', 'sell', 'invest', 'other'];
     if (! in_array($subject, $allowedSubjects, true)) {
         $subject = '';
     }
